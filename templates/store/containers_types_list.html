@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Containers Types list | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+
+  <h2 class="h4">
+    Types OF Containers
+  </h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Approximate weight</th>
+          <th>Length, Width, Depth</th>
+          <th>Material</th>
+          <th>Volume</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for container in object_list %}
+          <tr>
+            <td>{{ container.name }}</td>
+            <td>{{ container.approximate_weight_container_holds }}</td>
+            <td>{{ container.length }}, {{ container.width }}, {{ container.depth }}</td>
+            <td>{{ container.material_container_made_of }}</td>
+            <td>{{ container.container_volume }}</td>
+            <td>
+              <a href="{% url 'store:update_container_type' container.store.slug container.slug %}">
+              <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
+            </a></td>
+            
+            <td><a href="{% url 'store:delete_container_type' container.store.slug container.slug %}">
+              <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i>
+            </a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock content %}

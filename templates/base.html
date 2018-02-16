@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{% block title %} Dasa {% endblock title %}</title>
+    {% include "snippets/css.html" %}
+
+  </head>
+  <body>
+    {% include "navbar.html" %}
+    {% block msg %}
+      {% if messages %}
+        <div class="alert alert-success" role="alert">
+          <ul class="messagelist">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+        </div>
+      {% endif %}
+    {% endblock %}
+
+    <div role="main" class="container-fluid">
+      
+      {% block content %}
+
+      {% endblock %}
+
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">© Company 2018</span>
+      </div>
+    </footer>
+    {% include "snippets/js.html" %}
+  </body>
+</html>

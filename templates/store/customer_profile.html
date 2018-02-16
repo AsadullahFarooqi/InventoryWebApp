@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Customer Info | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <h3 >Customer Information</h3>
+    <div class="row">
+      <div class="table-responsive">
+
+        <div class="col-6">
+          <table class="table">
+            <tr>
+              <th>Name</th>
+              <td>{{ customer.name }}</td>
+            </tr>
+            <tr>
+              <th>ID Card</th>
+              <td>{{ customer.id_card_number }}</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>{{ customer.address }}</td>
+            </tr>
+            <tr>
+              <th>Contact</th>
+              <td>{{ customer.contact }}</td>
+            </tr>
+            <tr>
+              <td><a href="{% url 'store:update_customer' customer.store.slug customer.slug %}">
+                <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a>
+              </td>
+              <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}">
+                <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+          </table>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+<h2 class="h2">Exports are done to this customer <span class="badge badge-primary float-right">{{ customer.customer_exports.all.count }}</span></h2>
+  <div class="table-responsive">
+
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Full Info</th>
+          <th>Customer</th>
+          <th>Product name</th>
+          <th>Date</th>
+          <th>Containers</th>
+          <th>Pays<i class="fa fa-dollor text-warning" aria-hidden="true"></i></th>
+          <th>Edit</th>
+          <th>Delete</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for export in customer.customer_exports.all %}
+        <tr>
+          <td><a href="{% url 'store:export_details' export.store.slug export.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
+          <td>{{ export.customer }}</td>
+          <td>{{ export.containers_of }}</td>
+          <td>{{ export.date }}</td>
+          <td>{{ export.number_of_containers }}</td>
+          <td>
+            {% if export.payments_done_def %}
+            <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i>
+            {% else %}
+              <a href="{% url 'store:add_export_payment' export.store.slug export.customer.slug export.slug %}">
+              <i class="fa fa-warning fa-2x text-warning" aria-hidden="true"></i>
+              </a>
+
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'store:update_export' export.store.slug export.export_from_import.slug export.slug %}">
+          <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
+          </a>
+          </td>
+          <td><a href="{% url 'store:delete_export' export.store.slug export.slug %}">
+          <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
+          </a></td>
+          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+
+{% endblock %}

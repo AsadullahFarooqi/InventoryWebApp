@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Imports List | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+  <h4 class="h4">
+    List of all Imports
+  </h4>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <tr>
+        <th>Infos</th>
+        <th>Export</th>
+        <th>Supplier</th>
+        <th>Product</th>
+        <th>Date</th>
+        <th>Containers</th>
+        <th>Pays<i class="fa fa-dollar" aria-hidden="true"></i></th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      {% for import in object_list %}
+        <tr>
+          <td><a href="{% url 'store:import_details' import.store.slug import.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
+          <td><a href="{% url 'store:add_export' import.store.slug import.slug %}" class="btn btn-sm btn-outline-success" role="button">Export</a></td>
+          <td><a href="{% url 'store:supplier_profile' import.store.slug import.supplier.slug %}">{{ import.supplier }}</a></td>
+          <td>{{ import.containers_of }}</td>
+          <td>{{ import.date }}</td>
+          <td>{{ import.number_of_containers }}</td>
+          <td>
+            {% if import.payments_done_def %}
+            <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i>
+            {% else %}
+            <a href="{% url 'store:add_import_payment' import.store.slug import.supplier.slug import.slug %}">
+            <i class="fa fa-warning fa-2x text-warning" aria-hidden="true"></i></a>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'store:update_import' import.store.slug import.slug %}">
+            <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+          <td><a href="{% url 'store:delete_import' import.store.slug import.slug %}">
+            <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
+
+        </tr>
+      {% endfor %}
+    </table>  
+
+  </div>
+
+
+{% endblock %}

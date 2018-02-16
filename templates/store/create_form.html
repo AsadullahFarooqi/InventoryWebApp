@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add {{ page_of }} | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="lead">Add {{ page_of }} Form</h1>
+
+		<br/>
+
+		<form method="post">
+			{% csrf_token %}
+			{{ form|crispy }}
+			
+			<a href="javascript:history.back()" class="btn btn-sm btn-danger" role="button">
+			Cancel</a>
+			<button type="submit" value="submit" class="btn btn-secondary float-right">Add {{ page_of }}</button>
+		</form>
+	</div>
+{% endblock %}

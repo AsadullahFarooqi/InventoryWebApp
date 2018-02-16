@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Add Store | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+	<p>
+		<h2><a href="{% url 'store:add_store' %}">Add Store</a></h2>
+	</p>
+	<div class="table-responsive">
+		<table class="table table-sm">
+			<tr>
+				<th>Store</th>
+				<th>Store Location</th>
+				<th>Total crates store can have</th>
+			</tr>
+			{% for std in object_list %}
+			<tr>
+				<td><a href="{{ std.get_absolute_url }}">{{ std.store_name }}</a></td>
+				<td>{{ std.store_location }}</td>
+				<td>{{ std.boxes_store_can_take }}</td>
+			</tr>
+		    {% endfor %}
+		</table>
+	</div>
+{% endblock %}

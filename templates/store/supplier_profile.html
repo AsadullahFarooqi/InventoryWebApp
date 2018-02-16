@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Supplier Info | {{ block.super }} {% endblock %}
+
+{% block msg %}
+  {{ block.supper }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <h3 class="h4">Supplier Info</h3>
+    <div class="row">
+      
+      <div class="col-6">
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <th>Name</th>
+              <td>{{ supplier.name }}</td>
+            </tr>
+            <tr>
+              <th>ID Card</th>
+              <td>{{ supplier.id_card_number }}</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>{{ supplier.address }}</td>
+            </tr>
+            <tr>
+              <th>Contact</th>
+              <td>{{ supplier.contact }}</td>
+            </tr>
+            <tr>
+              <td><a href="{% url 'store:update_supplier' supplier.store.slug supplier.slug %}">
+                <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+              <td><a href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}">
+                <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h4">Imports from this supplier <span class="badge badge-primary float-right">{{ supplier.supplier_imports.all.count }}</span></h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Full Info</th>
+        <th>Export</th>
+        <th>Supplier</th>
+        <th>Product</th>
+        <th>Date</th>
+        <th>Containers</th>
+        <th>Pays<i class="fa fa-dollar" aria-hidden="true"></i></th>
+        <th>Edit</th>
+        <th>Delete</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% for import in supplier.supplier_imports.all %}
+      <tr>
+          <td><a href="{% url 'store:import_details' import.store.slug import.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
+          <td><a href="{% url 'store:add_export' import.store.slug import.slug %}" class="btn btn-sm btn-outline-success" role="button">Export</a></td>
+          <td><a href="{% url 'store:supplier_profile' import.store.slug import.supplier.slug %}">{{ import.supplier }}</a></td>
+          <td>{{ import.containers_of }}</td>
+          <td>{{ import.date }}</td>
+          <td>{{ import.number_of_containers }}</td>
+          <td>
+            {% if import.payments_done_def %}
+            <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i>
+            {% else %}
+            <a href="{% url 'store:add_import_payment' import.store.slug import.supplier.slug import.slug %}">
+            <i class="fa fa-warning fa-2x text-warning" aria-hidden="true"></i></a>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'store:update_import' import.store.slug import.slug %}">
+            <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+          <td><a href="{% url 'store:delete_import' import.store.slug import.slug %}">
+            <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
