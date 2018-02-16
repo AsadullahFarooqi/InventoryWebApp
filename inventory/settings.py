@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+############ sqlite3
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -99,6 +100,7 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 #     }
 # }
 
+############ PostgreSQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -110,6 +112,7 @@ DATABASES = {
     }
 }
 
+############ Mysql
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
