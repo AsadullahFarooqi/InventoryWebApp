@@ -193,7 +193,7 @@ class Exported(models.Model):
 
 	@property
 	def info(self):
-		return str(self.number_of_containers) + " " + str(self.containers_of)  + " " + str(self.exported_date)
+		return str(self.number_of_containers) + " " + str(self.containers_of) + " " + str(self.exported_date)
 
 	@property
 	def payments_done_def(self):

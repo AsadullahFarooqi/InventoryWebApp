@@ -41,14 +41,14 @@ class Profile(models.Model):
             recipient_list = ["asadullah.itcgcs@gmail.com"]
             html_message = "<p>user email and path {0}: {1}</p>".format(user_email, full_path)
             print(html_message)
-            sent_mail = send_mail(
-                            subject, 
-                            message, 
-                            from_email, 
-                            recipient_list, 
-                            fail_silently=False, 
-                            html_message=html_message)
-            # sent_mail = False
+            # sent_mail = send_mail(
+            #                 subject, 
+            #                 message, 
+            #                 from_email, 
+            #                 recipient_list, 
+            #                 fail_silently=False, 
+            #                 html_message=html_message)
+            sent_mail = False
             return sent_mail
 
 #f'Activate your account here: {full_path}' 

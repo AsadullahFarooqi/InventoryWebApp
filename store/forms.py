@@ -71,3 +71,5 @@ class ImportPaymentsForm(forms.ModelForm):
 	class Meta(object):
 		model = PaymentsToSuppliers
 		exclude = ["store",  "supplier", "timestamp", "slug"]
+
+
