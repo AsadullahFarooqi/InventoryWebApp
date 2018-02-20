@@ -21,7 +21,6 @@
         <th>Product</th>
         <th>Date</th>
         <th>Containers</th>
-        <th>Pays <i class="fa fa-dollar " aria-hidden="true"></i></th>
         <th>Edit</th>
         <th>Delete</th>
         
@@ -35,14 +34,6 @@
         <td>{{ export.containers_of }}</td>
         <td>{{ export.date }}</td>
         <td>{{ export.number_of_containers }}</td>
-        <td>
-          {% if export.payments_done_def %}
-          <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i>
-          {% else %}
-          <a href="{% url 'store:add_export_payment' export.store.slug export.customer.slug export.slug %}">
-          <i title="Click on the warning icon to add payment" class="fa fa-warning fa-2x text-warning" aria-hidden="true"></i></a>
-          {% endif %}
-        </td>
         <td><a href="{% url 'store:update_export' export.store.slug export.export_from_import.slug export.slug %}">
           <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
         <td><a href="{% url 'store:delete_export' export.store.slug export.slug %}">
