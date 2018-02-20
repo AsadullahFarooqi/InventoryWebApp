@@ -104,8 +104,8 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dasawork_inventory',
-        'USER': 'dasawork_asad',
+        'NAME': 'practice_database',
+        'USER': 'practice_user',
         'PASSWORD': 'i4cu.i4cu.',
         'HOST': 'localhost',
         'PORT': '',

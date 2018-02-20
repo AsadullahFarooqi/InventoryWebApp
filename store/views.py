@@ -225,6 +225,16 @@ def dashboard(request, store_slug=None):
 	return render(request, template_name, context)
 
 @login_required
+def each_day_reports(request, store_slug=None):
+	
+	template_name = "store/customer_profile.html"
+	context = {
+	"customer": customer,
+	}
+	return render(request, template_name, context)
+
+
+@login_required
 def customer_profile_view(request, store_slug=None, customer_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
