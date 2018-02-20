@@ -2,10 +2,17 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 
-from .custom_functions import list_changer
-from .utils import unique_slug_generator
+from .utils import unique_slug_generator, list_changer
 from company.models import Company
 
+
+# class PostManager(models.Manager):
+#     def get_queryset(self, *args, **kwargs):
+#         return PostQuerySet(self.model, using=self._db)
+            
+#     def active(self, *args, **kwargs):
+#         # Post.objects.all() = super(PostManager, self).all()
+#         return self.get_queryset().published()
 
 
 class Store(models.Model):
@@ -45,6 +52,10 @@ class Customer(models.Model):
 		ordering = ["-name"]
 
 	@property
+	def payments_should_be_paid(self):
+		return sum(list_changer(self.customer_exports.values_list("total_price")))
+
+	@property
 	def paid_payments(self):
 		return sum(list_changer(self.customer_payments.values_list("amount")))
 	
@@ -74,6 +85,10 @@ class Supplier(models.Model):
 	class Meta(object):
 		verbose_name_plural = "Suppliers"
 		ordering = ["-name"]
+
+	@property
+	def payments_should_be_paid(self):
+		return sum(list_changer(self.supplier_imports.values_list("total_price")))
 
 	@property
 	def paid_payments(self):

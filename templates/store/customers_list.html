@@ -16,6 +16,8 @@
           <th>Customer Name</th>
           <th>Address</th>
           <th>Contact</th>
+          <th>Paid</th>
+          <th>Total</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -27,6 +29,8 @@
               <a href="{% url 'store:customer_profile' customer.store.slug customer.slug %}">{{ customer.name }}</a></td>
             <td>{{ customer.address }}</td>
             <td>{{ customer.contact }}</td>
+            <td>{{ customer.paid_payments }}</td>
+            <td>{{ customer.payments_should_be_paid }}</td>
             <td><a href="{% url 'store:update_customer' customer.store.slug customer.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
             <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}">

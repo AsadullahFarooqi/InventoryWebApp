@@ -16,6 +16,8 @@
           <th>Supplier Name</th>
           <th>Address</th>
           <th>Contact</th>
+          <th>Paid</th>
+          <th>Total</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -26,6 +28,8 @@
             <td><a href="{% url 'store:supplier_profile' supplier.store.slug supplier.slug %}"> {{ supplier.name }}</a></td>
             <td>{{ supplier.address }}</td>
             <td>{{ supplier.contact }}</td>
+            <td>{{ supplier.paid_payments }}</td>
+            <td>{{ supplier.payments_should_be_paid }}</td>
             <td><a href="{% url 'store:update_supplier' supplier.store.slug supplier.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
             <td><a href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}">

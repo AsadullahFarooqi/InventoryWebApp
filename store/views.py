@@ -225,7 +225,7 @@ def dashboard(request, store_slug=None):
 	return render(request, template_name, context)
 
 @login_required
-def each_day_reports(request, store_slug=None):
+def each_day_report(request, store_slug=None):
 	
 	template_name = "store/customer_profile.html"
 	context = {
