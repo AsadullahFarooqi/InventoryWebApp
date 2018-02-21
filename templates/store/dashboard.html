@@ -30,7 +30,7 @@
             Imports & Exports
           </a>
           <a href="{% url 'store:add_import' store_slug %}" class="list-group-item list-group-item-action">Import + </a>
-          <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">Export + </a>
+          <a href="{% url 'store:add_export' store_slug %}" class="list-group-item list-group-item-action">Export + </a>
           <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">Import List >> <span class="badge badge-primary" style="float:right;">{{ total_imports }}</span></a>
           <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">Export List >> <span class="badge badge-primary" style="float:right;">{{ total_exports }}</span></a>
         </div>

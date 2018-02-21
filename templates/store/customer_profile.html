@@ -86,11 +86,12 @@
 
                 <tr>
                   <th>Total Payments to pay</th>
-                  <th>Paid Payments</th>
-                </tr>
-                <tr>
-                  <td>{{ customer.payments_should_be_paid }}</td>
                   <td>{{ customer.paid_payments }}</td>
+                  
+                
+                  <th>Paid Payments</th>
+                  <td>{{ customer.payments_should_be_paid }}</td>
+                  
                 </tr>
               </tbody>
             </table>
@@ -135,7 +136,7 @@
                   <td>{{ export.number_of_containers }}</td>
                   
                   <td>
-                    <a href="{% url 'store:update_export' export.store.slug export.export_from_import.slug export.slug %}">
+                    <a href="{% url 'store:update_export' export.store.slug export.slug %}">
                   <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
                   </a>
                   </td>

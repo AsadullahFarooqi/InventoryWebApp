@@ -34,7 +34,7 @@
         <td>{{ export.containers_of }}</td>
         <td>{{ export.date }}</td>
         <td>{{ export.number_of_containers }}</td>
-        <td><a href="{% url 'store:update_export' export.store.slug export.export_from_import.slug export.slug %}">
+        <td><a href="{% url 'store:update_export' export.store.slug export.slug %}">
           <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
         <td><a href="{% url 'store:delete_export' export.store.slug export.slug %}">
           <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>

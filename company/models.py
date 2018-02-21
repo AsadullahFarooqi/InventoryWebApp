@@ -13,7 +13,7 @@ class Company(models.Model):
 	owner = models.ForeignKey(Profile, related_name="companies")
 	name = models.CharField(max_length=25)
 	email = models.EmailField(blank=True, null=True)
-	phone = models.BigIntegerField(blank = False, null=False)
+	phone = models.BigIntegerField(blank=True, null=True)
 	location = models.CharField(max_length = 50, help_text="state/city, country")
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True)

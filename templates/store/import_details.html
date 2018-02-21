@@ -8,9 +8,10 @@
 
 
 {% block content %}
-  <h4 class="lead">Import Details</h4></div>
   
-  <div class="row">
+  <div class="container">
+    <h4>Import Details</h4>
+    <div class="row">
       <div class="col-sm-6">
         <table class="table table-sm">
           <tr>
@@ -31,13 +32,14 @@
           <tr>
             <th>Containers</th> <td>{{ import.number_of_containers }}</td>
           </tr>
-          <tr>
-            <th>Type Of Container</th> <td>{{ import.type_of_containers }}</td>
-          </tr>
+          
         </table>
       </div>
       <div class="col-sm-6">
         <table class="table table-sm">
+          <tr>
+            <th>Type Of Container</th> <td>{{ import.type_of_containers }}</td>
+          </tr>
           <tr>
             <th>Cost</th> <td>{{ import.cost }}</td>
           </tr>
@@ -64,6 +66,8 @@
         </table>
       </div>
   </div>
+  </div>
+  
 
 
 {% endblock %}

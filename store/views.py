@@ -132,7 +132,7 @@ class ImportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 		return super(ImportCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:add_import_payment", kwargs={"store_slug": self.kwargs["store_slug"], "supplier_slug":self.object.supplier.slug, "import_slug": self.object.slug})
+		return reverse("store:imports_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
 class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -148,12 +148,11 @@ class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
-		obj.export_from_import = Imported.objects.get(slug=self.kwargs["import_slug"])
 
 		return super(ExportCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:add_export_payment", kwargs={"store_slug": self.kwargs["store_slug"], "customer_slug":self.object.customer.slug, "export_slug": self.object.slug})
+		return reverse("store:exports_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
 class ExportPaymentsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -281,6 +280,39 @@ def export_details_view(request, store_slug=None, export_slug=None):
 
 ######################### LIST VIEWS *********************************
 
+# def customer_list_view(request, store_slug=None):
+	
+# 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+# 		raise Http404
+
+# 	query = request.GET.get("q")
+# 	if query:
+# 		queryset_list = queryset_list.filter(
+# 				Q(title__icontains=query)|
+# 				Q(content__icontains=query)|
+# 				Q(user__first_name__icontains=query) |
+# 				Q(user__last_name__icontains=query)
+# 				).distinct()
+# 	paginator = Paginator(queryset_list, 8) # Show 25 contacts per page
+# 	page_request_var = "page"
+# 	page = request.GET.get(page_request_var)
+# 	try:
+# 		queryset = paginator.page(page)
+# 	except PageNotAnInteger:
+# 		# If page is not an integer, deliver first page.
+# 		queryset = paginator.page(1)
+# 	except EmptyPage:
+# 		# If page is out of range (e.g. 9999), deliver last page of results.
+# 		queryset = paginator.page(paginator.num_pages)
+
+
+# 	context = {
+# 		"object_list": queryset, 
+# 		"title": "List",
+# 		"page_request_var": page_request_var,
+# 		"today": today,
+# 	}
+# 	return render(request, "post_list.html", context)
 
 class CustomerListView(LoginRequiredMixin, ListView):
 	template_name = "store/customers_list.html"

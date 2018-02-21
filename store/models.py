@@ -18,18 +18,18 @@ from company.models import Company
 class Store(models.Model):
 	company = models.ForeignKey(Company, related_name="stores")
 	name = models.CharField(max_length=20)
-	address = models.CharField(max_length=250)
+	address = models.CharField(max_length=250, blank=True, null=True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
 	capacity = models.PositiveIntegerField(blank=True, null=True, help_text="containers the store can hold")
-	store_active = models.BooleanField(default=True)
+	
 	timestamp = models.DateTimeField(auto_now_add=True)
 	store_is_active_from = models.DateField(auto_now=False, auto_now_add=False)
+
+	active = models.BooleanField(default=True)
 
 	class Meta(object):
 		verbose_name_plural = "Stores"
 		ordering = ["-timestamp"]
-
-	class abstract
 
 	def __str__(self):
 		return self.name
@@ -53,7 +53,10 @@ class Customer(models.Model):
 
 	@property
 	def payments_should_be_paid(self):
-		return sum(list_changer(self.customer_exports.values_list("total_price")))
+		payments = 0
+		for export in self.customer_exports.all():
+			payments += export.total_price
+		return payments
 
 	@property
 	def paid_payments(self):
@@ -88,7 +91,10 @@ class Supplier(models.Model):
 
 	@property
 	def payments_should_be_paid(self):
-		return sum(list_changer(self.supplier_imports.values_list("total_price")))
+		payments = 0
+		for importt in self.supplier_imports.all():
+			payments += importt.total_price
+		return payments
 
 	@property
 	def paid_payments(self):
@@ -156,7 +162,7 @@ class ContainersTypes(models.Model):
 		return self.depth * self.width * self.length
 
 	def __str__(self):
-		return str(self.name) + str(self.length) + str(self.width) + str(self.depth)
+		return str(self.container_use_for) + str(self.length) + str(self.width) + str(self.depth)+ str(self.name)
 
 	# def get_absolute_url(self):
 	#     return reverse("store:store_details", kwargs={"slug": self.slug})
