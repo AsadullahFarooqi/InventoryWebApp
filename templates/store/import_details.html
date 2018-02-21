@@ -18,7 +18,7 @@
             <th>Store</th> <td>{{ import.store }}</td>
           </tr>
           <tr>
-            <th>Supplier</th> <td>{{ import.supplier }}</td>
+            <th>Supplier</th><td><strong><a href="{% url 'store:supplier_profile' import.store.slug import.supplier.slug %}">{{ import.supplier }}</td>
           </tr>
           <tr>
             <th>Recipt Number from supplier</th> <td>{{ import.supplier_recipt_number}}</td>

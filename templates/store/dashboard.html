@@ -6,21 +6,25 @@
 {% endblock %}
 
 {% block content %}
-  <header>
-  <h1 class="display-6">"{{ store }}" <small>Dashboard</small></h1>
-  </header>
-  <br/>
+  
   <div class="container">
+    <header>
+      <h1 class="display-6">"{{ store }}" <small>Dashboard</small></h1>
+    </header>
     <div class="row">
       <div class="col-md-4">
         <div class="list-group">
           <a href="" class="list-group-item list-group-item-action active">
             Add Master Data
           </a>
-          <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">Add Product +  </a>
-          <a href="{% url 'store:add_container_type' store_slug %}" class="list-group-item list-group-item-action">Add Type of Container +</a>
-          <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">Add Customer + </a>
-          <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">Add Supplier +</a>
+          <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-plus mr-3"></i>Add Product</a>
+          <a href="{% url 'store:add_container_type' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-plus mr-3"></i>Add Type of Container</a>
+          <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-plus mr-3"></i>Add Customer </a>
+          <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-plus mr-3"></i>Add Supplier</a>
         </div>
         <br>
       </div>
@@ -29,10 +33,30 @@
           <a href="" class="list-group-item list-group-item-action active">
             Imports & Exports
           </a>
-          <a href="{% url 'store:add_import' store_slug %}" class="list-group-item list-group-item-action">Import + </a>
-          <a href="{% url 'store:add_export' store_slug %}" class="list-group-item list-group-item-action">Export + </a>
-          <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">Import List >> <span class="badge badge-primary" style="float:right;">{{ total_imports }}</span></a>
-          <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">Export List >> <span class="badge badge-primary" style="float:right;">{{ total_exports }}</span></a>
+          <a href="{% url 'store:suppliers_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Suppliers 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_suppliers }}</span> </a>
+          <a href="{% url 'store:customers_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Customers 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_customers }}</span></a>
+          <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Import 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_imports }}</span></a>
+          <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Export 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_exports }}</span></a>
         </div>
 
         <br>
@@ -42,12 +66,32 @@
           <a href="" class="list-group-item list-group-item-action active">
             View Lists
           </a>
-          <a href="{% url 'store:suppliers_list' store_slug %}" class="list-group-item list-group-item-action">Suppliers List >> <span class="badge badge-primary" style="float:right;">{{ total_suppliers }}</span> </a>
-          <a href="{% url 'store:customers_list' store_slug %}" class="list-group-item list-group-item-action">Customers List >> <span class="badge badge-primary" style="float:right;">{{ total_customers }}</span></a>
-          <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">Products List >> <span class="badge badge-primary" style="float:right;">{{ total_products }}</span></a>
-          <a href="{% url 'store:containers_types_list' store_slug %}" class="list-group-item list-group-item-action">Containers Types List >> <span class="badge badge-primary" style="float:right;">{{ total_types_of_containers }}</span></a>
-          <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">Import Payments List >> <span class="badge badge-primary" style="float:right;">{{ total_import_payments }}</span></a>
-          <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">Export Payments List >> <span class="badge badge-primary" style="float:right;">{{ total_export_payments }}</span></a>
+          
+          
+          <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Products 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
+          <a href="{% url 'store:containers_types_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Containers Types 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_types_of_containers }}</span></a>
+          <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Import Payments 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_import_payments }}</span></a>
+          <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-list-ul mr-2"></i>Export Payments 
+
+
+ 
+            <span class="badge badge-primary float-right" > {{ total_export_payments }}</span></a>
         </div>
 
         <br>
