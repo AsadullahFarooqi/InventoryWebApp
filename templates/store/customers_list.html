@@ -6,6 +6,19 @@
 {% endblock %}
 
 {% block content %}
+
+<form method='GET' action='' class='row'>
+        <div class='col-sm-6'>
+            <div class='input-group'>
+                <input class='form-control' type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}'/>
+                <span class='input-group-btn'>
+                    <!-- <input class='btn btn-default' type='submit' value='Search' /> -->
+                    <button class='btn btn-default' type='submit'>Search <i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+</form>
+
   <h4 class="h4">
     Customers List
   </h4>

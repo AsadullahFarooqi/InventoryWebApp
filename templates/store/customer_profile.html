@@ -7,62 +7,65 @@
 
 {% block content %}
 
-  <div class="container">
-    <h3 >Customer Information</h3>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="table-responsive">
-          <table class="table">
-            <tr>
-              <th>Name</th>
-              <td>{{ customer.name }}</td>
-            </tr>
-            <tr>
-              <th>ID Card</th>
-              <td>{{ customer.id_card_number }}</td>
-            </tr>
-            <tr>
-              <th>Address</th>
-              <td>{{ customer.address }}</td>
-            </tr>
-            <tr>
-              <th>Contact</th>
-              <td>{{ customer.contact }}</td>
-            </tr>
+  <h3 >Customer Information</h3>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <td>{{ customer.name }}</td>
+          </tr>
+          <tr>
+            <th>ID Card</th>
+            <td>{{ customer.id_card_number }}</td>
+          </tr>
+          <tr>
+            <th>Address</th>
+            <td>{{ customer.address }}</td>
+          </tr>
+          <tr>
+            <th>Contact</th>
+            <td>{{ customer.contact }}</td>
+          </tr>
 
-            <tr>
-              <td><a href="{% url 'store:update_customer' customer.store.slug customer.slug %}"><i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-
-              <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
-            </tr>
+          <tr>
+            <th>Paid Payments</th>
+            <td>{{ customer.paid_payments }}</td>
             
-          </table>
-        </div>
+          </tr>
+
+          <tr>
+            <th>Total Payment should be paid</th>
+            <td>{{ customer.payments_should_be_paid }}</td>
+          </tr>
+
+          
+          
+        </table>
       </div>
-      <div class="col-sm-6">
-        <div class="table-responsive">
-          <table class="table">
-            <tr>
-              <th>Add Payment</th>
-              <td><a title="Add Payments!" href="{% url 'store:add_customer_payment' customer.store.slug customer.slug %}"><i class="far fa-credit-card text-success fa-2x"></i></a></td>
-            </tr>
-            <tr>
-              <th>Export</th>
-              <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}"><i class="fas fa-arrow-circle-down text-warning fa-2x"></i></a></td>
-            </tr>
-            
-            <tr>
-              <th>Paid Payments</th>
-              <td>{{ customer.paid_payments }}</td>
-              
-            </tr>
+    </div>
+    <div class="col-sm-6">
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>Add Payment</th>
+            <td><a title="Add Payments!" href="{% url 'store:add_customer_payment' customer.store.slug customer.slug %}"><i class="far fa-credit-card text-success fa-2x"></i></a></td>
+          </tr>
+          <tr>
+            <th>Export</th>
+            <td><a href="{% url 'store:add_export' customer.store.slug customer.slug %}"><i class="fas fa-arrow-circle-down text-warning fa-2x"></i></a></td>
+          </tr>
 
-            <tr>
-              <th>Total Payment should be paid</th>
-              <td>{{ customer.payments_should_be_paid }}</td>
-            </tr>
-          </table>
-        </div>
+          <tr>
+            <th>Edit</th>
+            <td><a href="{% url 'store:update_customer' customer.store.slug customer.slug %}"><i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+          <tr>
+            <th>Delete</th>
+            <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
@@ -101,7 +104,7 @@
                   <td>{{ export.number_of_containers }}</td>
                   
                   <td>
-                    <a href="{% url 'store:update_export' export.store.slug export.slug %}">
+                    <a href="{% url 'store:update_export' export.store.slug customer.slug export.slug %}">
                   <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
                   </a>
                   </td>
