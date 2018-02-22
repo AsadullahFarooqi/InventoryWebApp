@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Payments of Customer | {{ block.super }} {% endblock %}
 
-{% block msg %}
-  {{ block.supper }}
-{% endblock %}
-
-
 {% block content %}
 
   <h4 class="h4">
@@ -32,10 +27,10 @@
             <td>{{ payment.payment_method }}</td>
             <td>{{ payment.amount }}</td>
             <td>{{ payment.date }}</td>
-            <td><a href="{% url 'store:update_export_payment' payment.store.slug payment.customer.slug payment.payment_of_export.slug payment.slug %}">
+            <td><a href="{% url 'store:update_customer_payment' payment.store.slug payment.customer.slug payment.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
 
-            <td><a href="{% url 'store:delete_export_payment' payment.store.slug payment.customer.slug payment.payment_of_export.slug payment.slug %}">
+            <td><a href="{% url 'store:delete_customer_payment' payment.store.slug payment.customer.slug payment.slug %}">
               <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}

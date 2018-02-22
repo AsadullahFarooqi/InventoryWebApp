@@ -6,13 +6,10 @@ from .utils import unique_slug_generator, list_changer
 from company.models import Company
 
 
-# class PostManager(models.Manager):
-#     def get_queryset(self, *args, **kwargs):
-#         return PostQuerySet(self.model, using=self._db)
-            
+# class AllModels(models.Manager):
 #     def active(self, *args, **kwargs):
 #         # Post.objects.all() = super(PostManager, self).all()
-#         return self.get_queryset().published()
+#         return super(AllModels, self).filter(active=True)
 
 
 class Store(models.Model):
@@ -46,6 +43,8 @@ class Customer(models.Model):
 	contact = models.BigIntegerField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
+
+	# objects = AllModels()
 
 	class Meta(object):
 		verbose_name_plural = "Customers"

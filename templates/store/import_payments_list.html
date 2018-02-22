@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Payments to suppliers | {{ block.super }} {% endblock %}
 
-{% block msg %}
-  {{ block.supper }}
-{% endblock %}
 
 
 {% block content %}
@@ -27,9 +24,9 @@
           <td>{{ payment.payment_method }}</td>
           <td>{{ payment.amount }}</td>
           <td>{{ payment.date }}</td>
-          <td><a href="{% url 'store:update_import_payment' payment.store.slug payment.supplier.slug payment.payment_of_import.slug payment.slug %}">
+          <td><a href="{% url 'store:update_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
             <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-          <td><a href="{% url 'store:delete_import_payment' payment.store.slug payment.supplier.slug payment.payment_of_import.slug payment.slug %}">
+          <td><a href="{% url 'store:delete_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
             <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
         </tr>
       {% endfor %}

@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
+
 
 from .forms import (
 CustomerForm,
@@ -128,11 +130,12 @@ class ImportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+		obj.supplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
 
 		return super(ImportCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:imports_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:suppliers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
 class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -148,20 +151,21 @@ class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
 
 		return super(ExportCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:exports_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:customers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
-class ExportPaymentsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CustomerPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
 	form_class = ExportPaymentsForm
 	success_message = "Successfully added!"
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ExportPaymentsCreateView, self).get_context_data(*args, **kwargs)
+		context = super(CustomerPaymentCreateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Customer Payment"
 		return context
 
@@ -169,21 +173,20 @@ class ExportPaymentsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVi
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
-		obj.payment_of_export = Exported.objects.get(slug=self.kwargs["export_slug"])
 
-		return super(ExportPaymentsCreateView, self).form_valid(form)
+		return super(CustomerPaymentCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:export_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:customers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
-class ImportPaymentsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class SupplierPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
 	form_class = ImportPaymentsForm
 	success_message = "Successfully added!"
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ImportPaymentsCreateView, self).get_context_data(*args, **kwargs)
+		context = super(SupplierPaymentCreateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Payments to Supplier"
 		return context
 
@@ -191,12 +194,11 @@ class ImportPaymentsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVi
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.supplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
-		obj.payment_of_import = Imported.objects.get(slug=self.kwargs["import_slug"])
 
-		return super(ImportPaymentsCreateView, self).form_valid(form)
+		return super(SupplierPaymentCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:import_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:suppliers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 	######################################################################################################################
 	##########################################   Retrieve Views   ########################################################
@@ -280,67 +282,81 @@ def export_details_view(request, store_slug=None, export_slug=None):
 
 ######################### LIST VIEWS *********************************
 
-# def customer_list_view(request, store_slug=None):
+@login_required
+def customer_list_view(request, store_slug):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+			raise Http404
+
+	queryset_list = Store.objects.get(slug=store_slug).customers.all() #.order_by("-timestamp")
+
+	query = request.GET.get("q")
 	
-# 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
-# 		raise Http404
-
-# 	query = request.GET.get("q")
-# 	if query:
-# 		queryset_list = queryset_list.filter(
-# 				Q(title__icontains=query)|
-# 				Q(content__icontains=query)|
-# 				Q(user__first_name__icontains=query) |
-# 				Q(user__last_name__icontains=query)
-# 				).distinct()
-# 	paginator = Paginator(queryset_list, 8) # Show 25 contacts per page
-# 	page_request_var = "page"
-# 	page = request.GET.get(page_request_var)
-# 	try:
-# 		queryset = paginator.page(page)
-# 	except PageNotAnInteger:
-# 		# If page is not an integer, deliver first page.
-# 		queryset = paginator.page(1)
-# 	except EmptyPage:
-# 		# If page is out of range (e.g. 9999), deliver last page of results.
-# 		queryset = paginator.page(paginator.num_pages)
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(name__icontains=query)|
+				Q(last_name__icontains=query)|
+				Q(address__icontains=query) 
+				).distinct()		
 
 
-# 	context = {
-# 		"object_list": queryset, 
-# 		"title": "List",
-# 		"page_request_var": page_request_var,
-# 		"today": today,
-# 	}
-# 	return render(request, "post_list.html", context)
-
-class CustomerListView(LoginRequiredMixin, ListView):
 	template_name = "store/customers_list.html"
+	context = {
+	"object_list": queryset_list,
+	}
 
-	def get_queryset(self):
-		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+	return render(request, template_name, context)
+
+@login_required
+def supplier_list_view(request, store_slug):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 			raise Http404
 
-		slug = self.kwargs["store_slug"]
-		return Store.objects.get(slug=slug).customers.all()
+	queryset_list = Store.objects.get(slug=store_slug).suppliers.all() #.order_by("-timestamp")
 
-		# store = Store.objects.get(slug=self.kwargs["store_slug"])
-		# return Customer.objects.all().filter(store=store)
+	query = request.GET.get("q")
+	
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(name__icontains=query)|
+				Q(last_name__icontains=query)|
+				Q(address__icontains=query) 
+				).distinct()		
 
 
-class SupplierListView(LoginRequiredMixin, ListView):
-	model = Supplier
 	template_name = "store/suppliers_list.html"
+	context = {
+	"object_list": queryset_list,
+	}
 
-	def get_queryset(self):
-		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
-			raise Http404
+	return render(request, template_name, context)
+
+# class CustomerListView(LoginRequiredMixin, ListView):
+# 	template_name = "store/customers_list.html"
+
+# 	def get_queryset(self):
+# 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+# 			raise Http404
+
+# 		slug = self.kwargs["store_slug"]
+# 		return Store.objects.get(slug=slug).customers.all()
+
+# 		# store = Store.objects.get(slug=self.kwargs["store_slug"])
+# 		# return Customer.objects.all().filter(store=store)
+
+
+# class SupplierListView(LoginRequiredMixin, ListView):
+# 	model = Supplier
+# 	template_name = "store/suppliers_list.html"
+
+# 	def get_queryset(self):
+# 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+# 			raise Http404
 		
-		slug = self.kwargs["store_slug"]
-		return Store.objects.get(slug=slug).suppliers.all()
+# 		slug = self.kwargs["store_slug"]
+# 		return Store.objects.get(slug=slug).suppliers.all()
 
-		# store = Store.objects.get(slug=self.kwargs["store_slug"])
-		# return Supplier.objects.all().filter(store=store)
+# 		# store = Store.objects.get(slug=self.kwargs["store_slug"])
+# 		# return Supplier.objects.all().filter(store=store)
 
 class ProductsListView(LoginRequiredMixin, ListView):
 	template_name = "store/products_list.html"
@@ -528,6 +544,7 @@ class ImportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+		obj.supplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
 
 		return super(ImportUpdateView, self).form_valid(form)
 
@@ -554,7 +571,7 @@ class ExportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
-		obj.export_from_import = Imported.objects.get(slug=self.kwargs["import_slug"])
+		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
 
 
 		return super(ExportUpdateView, self).form_valid(form)
@@ -563,7 +580,7 @@ class ExportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		return reverse("store:exports_list", kwargs={"store_slug": self.kwargs["store_slug"],})
 
 
-class ExportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class CustomerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	template_name = "store/update_form.html"
 	success_message = "Update is Successfully done!."
 	form_class = ExportPaymentsForm
@@ -571,11 +588,11 @@ class ExportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVi
 	def get_object(self, **kwargs):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
 			raise Http404
-		self.object = PaymentsOfCustomers.objects.get(slug= self.kwargs["export_payment_slug"])
+		self.object = PaymentsOfCustomers.objects.get(slug = self.kwargs["payment_slug"])
 		return self.object
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ExportPaymentsUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(CustomerPaymentUpdateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Customer Payment"
 		return context
 
@@ -583,15 +600,14 @@ class ExportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVi
 		obj = form.save(commit=False)
 		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
-		obj.payment_of_export = Exported.objects.get(slug=self.kwargs["export_slug"])
 
-		return super(ExportPaymentsUpdateView, self).form_valid(form)
+		return super(CustomerPaymentUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
 		return reverse("store:export_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 
-class ImportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class SupplierPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	template_name = "store/update_form.html"
 	success_message = "Update is Successfully done!."
 	form_class = ImportPaymentsForm
@@ -599,11 +615,11 @@ class ImportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVi
 	def get_object(self, **kwargs):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
 			raise Http404
-		self.object = PaymentsToSuppliers.objects.get(slug= self.kwargs["import_payment_slug"])
+		self.object = PaymentsToSuppliers.objects.get(slug= self.kwargs["payment_slug"])
 		return self.object
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(ImportPaymentsUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(SupplierPaymentUpdateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Payment to Supplier"
 		return context
 
@@ -611,9 +627,8 @@ class ImportPaymentsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVi
 		obj = form.save(commit=False)
 		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.suppplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
-		obj.payment_of_import = Imported.objects.get(slug=self.kwargs["import_slug"])
 
-		return super(ImportPaymentsUpdateView, self).form_valid(form)
+		return super(SupplierPaymentUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
 		return reverse("store:import_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
@@ -690,7 +705,7 @@ def export_delete_view(request, store_slug=None, export_slug=None):
 	return HttpResponseRedirect(reverse("store:exports_list", kwargs={"store_slug": store_slug}))
 
 @login_required
-def export_payment_delete_view(request, store_slug=None, customer_slug=None, export_slug=None, export_payment_slug=None):
+def customer_payment_delete_view(request, store_slug=None, customer_slug=None, export_slug=None, export_payment_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(PaymentsOfCustomers, slug=export_payment_slug)
@@ -701,7 +716,7 @@ def export_payment_delete_view(request, store_slug=None, customer_slug=None, exp
 	return HttpResponseRedirect(reverse("store:export_payments_list", kwargs={"store_slug": store_slug,}))
 
 @login_required
-def import_payment_delete_view(request, store_slug=None, supplier_slug=None, import_slug=None, import_payment_slug=None):
+def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, import_slug=None, import_payment_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(PaymentsToSuppliers, slug=import_payment_slug)

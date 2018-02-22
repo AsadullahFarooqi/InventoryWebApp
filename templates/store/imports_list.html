@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Imports List | {{ block.super }} {% endblock %}
 
-{% block msg %}
-  {{ block.supper }}
-{% endblock %}
+
 
 {% block content %}
   <h4 class="h4">
@@ -27,7 +25,7 @@
           <td>{{ import.containers_of }}</td>
           <td>{{ import.date }}</td>
           <td>{{ import.number_of_containers }}</td>
-          <td><a href="{% url 'store:update_import' import.store.slug import.slug %}">
+          <td><a href="{% url 'store:update_import' import.store.slug import.supplier.slug import.slug %}">
             <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
           <td><a href="{% url 'store:delete_import' import.store.slug import.slug %}">
             <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>

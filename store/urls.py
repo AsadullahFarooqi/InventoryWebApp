@@ -17,12 +17,12 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/add-import/$', views.ImportCreateView.as_view(), name="add_import"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/add-export/$', views.ExportCreateView.as_view(), name="add_export"),
 
-    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/add-export-payments/$', views.ExportPaymentsCreateView.as_view(), name="add_customer_payment"),
-    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/add-import-payments/$', views.ImportPaymentsCreateView.as_view(), name="add_supplier_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/add-customer-payments/$', views.CustomerPaymentCreateView.as_view(), name="add_customer_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/add-supplier-payments/$', views.SupplierPaymentCreateView.as_view(), name="add_supplier_payment"),
 
     ############## LIST VIEWS  ******************
-    url(r'^(?P<store_slug>[\w-]+)/suppliers-list/$', views.SupplierListView.as_view(), name="suppliers_list"),
-    url(r'^(?P<store_slug>[\w-]+)/customers-list/$', views.CustomerListView.as_view(), name="customers_list"),
+    url(r'^(?P<store_slug>[\w-]+)/suppliers-list/$', views.supplier_list_view, name="suppliers_list"),
+    url(r'^(?P<store_slug>[\w-]+)/customers-list/$', views.customer_list_view, name="customers_list"),
     url(r'^(?P<store_slug>[\w-]+)/products-list/$', views.ProductsListView.as_view(), name="products_list"),
     url(r'^(?P<store_slug>[\w-]+)/containers-types-list/$', views.ContainerTypesListView.as_view(), name="containers_types_list"),
 
@@ -49,8 +49,8 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<import_slug>[\w-]+)/update-import/$', views.ImportUpdateView.as_view(), name="update_import"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<export_slug>[\w-]+)/update-export/$', views.ExportUpdateView.as_view(), name="update_export"),
 
-    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-payment/$', views.ExportPaymentsUpdateView.as_view(), name="update_export_payment"),
-    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-payment/$', views.ImportPaymentsUpdateView.as_view(), name="update_import_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-customer-payment/$', views.CustomerPaymentUpdateView.as_view(), name="update_customer_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-supplier-payment/$', views.SupplierPaymentUpdateView.as_view(), name="update_supplier_payment"),
 
 
     ############## DELETE VIEWS  ******************
@@ -62,7 +62,7 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<import_slug>[\w-]+)/delete-import/$', views.import_delete_view, name="delete_import"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<import_slug>[\w-]+)/delete-export/$', views.export_delete_view, name="delete_export"),
 
-    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/delete-payment/$', views.export_payment_delete_view, name="delete_export_payment"),
-    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/delete-payment/$', views.import_payment_delete_view, name="delete_import_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/delete-customer-payment/$', views.customer_payment_delete_view, name="delete_customer_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/delete-supplier-payment/$', views.supplier_payment_delete_view, name="delete_supplier_payment"),
 
 ]

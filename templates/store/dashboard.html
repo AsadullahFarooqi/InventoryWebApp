@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Dashboard | {{ block.super }} {% endblock %}
 
-{% block msg %}
-  {{ block.supper }}
-{% endblock %}
 
 {% block content %}
   
@@ -11,92 +8,149 @@
     <header>
       <h1 class="display-6">"{{ store }}" <small>Dashboard</small></h1>
     </header>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="list-group">
-          <a href="" class="list-group-item list-group-item-action active">
-            Add Master Data
-          </a>
-          <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-plus mr-3"></i>Add Product</a>
-          <a href="{% url 'store:add_container_type' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-plus mr-3"></i>Add Type of Container</a>
-          <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-plus mr-3"></i>Add Customer </a>
-          <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-plus mr-3"></i>Add Supplier</a>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="dailyDetails-tab" data-toggle="tab" href="#dailyDetails" role="tab" aria-controls="dailyDetails" aria-selected="false">Daily Reports</a>
+      </li>
+      
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="list-group">
+              <a href="" class="list-group-item list-group-item-action active">
+                Add Master Data
+              </a>
+              <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus mr-3"></i>Add Product</a>
+              <a href="{% url 'store:add_container_type' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus mr-3"></i>Add Type of Container</a>
+              <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus mr-3"></i>Add Customer </a>
+              <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus mr-3"></i>Add Supplier</a>
+            </div>
+            <br>
+          </div>
+          <div class="col-md-4">
+            <div class="list-group">
+              <a href="" class="list-group-item list-group-item-action active">
+                Imports & Exports
+              </a>
+              <a href="{% url 'store:suppliers_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Suppliers 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_suppliers }}</span> </a>
+              <a href="{% url 'store:customers_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Customers 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_customers }}</span></a>
+              <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Import 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_imports }}</span></a>
+              <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Export 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_exports }}</span></a>
+            </div>
+
+            <br>
+          </div>
+          <div class="col-md-4">
+            <div class="list-group">
+              <a href="" class="list-group-item list-group-item-action active">
+                View Lists
+              </a>
+              
+              
+              <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Products 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
+              <a href="{% url 'store:containers_types_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Containers Types 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_types_of_containers }}</span></a>
+              <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Suppliers Payments 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_import_payments }}</span></a>
+              <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Customers Payments 
+
+
+     
+                <span class="badge badge-primary float-right" > {{ total_export_payments }}</span></a>
+            </div>
+
+            <br>
+          </div>
         </div>
-        <br>
       </div>
-      <div class="col-md-4">
-        <div class="list-group">
-          <a href="" class="list-group-item list-group-item-action active">
-            Imports & Exports
-          </a>
-          <a href="{% url 'store:suppliers_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Suppliers 
 
-
- 
-            <span class="badge badge-primary float-right" > {{ total_suppliers }}</span> </a>
-          <a href="{% url 'store:customers_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Customers 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_customers }}</span></a>
-          <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Import 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_imports }}</span></a>
-          <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Export 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_exports }}</span></a>
-        </div>
-
-        <br>
-      </div>
-      <div class="col-md-4">
-        <div class="list-group">
-          <a href="" class="list-group-item list-group-item-action active">
-            View Lists
-          </a>
-          
-          
-          <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Products 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
-          <a href="{% url 'store:containers_types_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Containers Types 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_types_of_containers }}</span></a>
-          <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Import Payments 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_import_payments }}</span></a>
-          <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-list-ul mr-2"></i>Export Payments 
-
-
- 
-            <span class="badge badge-primary float-right" > {{ total_export_payments }}</span></a>
-        </div>
-
-        <br>
+      <div class="tab-pane fade" id="dailyDetails" role="tabpanel" aria-labelledby="dailyDetails-tab">
+        <!-- <div class="table-responsive">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Imported</th>
+                <th>Exported</th>
+                <th>Paid Money</th>
+                <th>Total Money</th>
+              </tr>
+            </thead>
+            {% for item in object_list %}
+              <tbody>
+                <tr>
+                  <td style="font-size: 20px;">
+                    <a href="{% url 'store:customer_profile' customer.store.slug customer.slug %}">{{ customer.name }}</a></td>
+                  <td>{{ item.address }}</td>
+                  <td>{{ customer.contact }}</td>
+                  <td>{{ customer.paid_payments }}</td>
+                  <td>{{ customer.payments_should_be_paid }}</td>
+                  <td><a href="{% url 'store:update_customer' customer.store.slug customer.slug %}">
+                    <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+                  <td><a href="{% url 'store:delete_customer' customer.store.slug customer.slug %}">
+                    <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+                  <td>
+                    {% if customer.paid_payments >= customer.payments_should_be_paid %}
+                      <a href="{% url 'store:add_customer_payment' customer.store.slug customer.slug %}">
+                        <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i></a>
+                    {% else %}
+                      <a href="{% url 'store:add_customer_payment' customer.store.slug customer.slug %}">
+                        <i class="fa fa-cross text-danger fa-2x" aria-hidden="true"></i></a>
+                    {% endif %}
+                  </td>
+                  <td><a href="{% url 'store:add_export' customer.store.slug customer.slug %}"><i class="fas fa-arrow-circle-up text-warning fa-2x"></i></a></td>
+                </tr>
+              </tbody>
+            {% endfor %}
+          </table>
+        </div> -->
       </div>
     </div>
+    
+    
   </div>
 
 {% endblock %}
