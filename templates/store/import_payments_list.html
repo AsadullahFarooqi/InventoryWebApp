@@ -9,27 +9,31 @@
   </h1>
   <div class="table-responsive">
     <table class="table table-striped table-sm">
-      <tr>
-        <th>Supplier</th>
-        <th>Method</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Edit</th>
-        <th>Delete</th>
+      <thead>
+        <tr>
+          <th>Supplier</th>
+          <th>Method</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Edit</th>
+          <th>Delete</th>
 
       </tr>
-      {% for payment in object_list %}
-        <tr>
-          <td>{{ payment.supplier }}</td>
-          <td>{{ payment.payment_method }}</td>
-          <td>{{ payment.amount }}</td>
-          <td>{{ payment.date }}</td>
-          <td><a href="{% url 'store:update_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
-            <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-          <td><a href="{% url 'store:delete_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
-            <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
-        </tr>
-      {% endfor %}
+      </thead>
+      <tbody>
+        {% for payment in object_list %}
+          <tr>
+            <td>{{ payment.supplier }}</td>
+            <td>{{ payment.payment_method }}</td>
+            <td>{{ payment.amount }}</td>
+            <td>{{ payment.date }}</td>
+            <td><a href="{% url 'store:update_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
+              <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+            <td><a href="{% url 'store:delete_supplier_payment' payment.store.slug payment.supplier.slug payment.slug %}">
+              <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </table>    
   </div>
 

@@ -2,7 +2,7 @@ import random
 import string
 
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
@@ -27,32 +27,29 @@ class Profile(models.Model):
 
     def send_activation_email(self):
         if not self.activated:
+
             self.activation_key = code_generator()# 'somekey' #gen key
             self.save()
-            #path_ = reverse()
             user_email = self.user.email
-            path_ = reverse_lazy("user_activation", kwargs={"code": self.activation_key})
-            full_path = HttpResponseRedirect(path_)
+            path_ = reverse("user_activation", kwargs={"code": self.activation_key})
+            full_path = "http://asadliam.pythonanywhere.com" + path_
             print(full_path)
-            subject = "{0} User Account Activation".format(user_email,)
+            subject = "User Account Activation"
             from_email = settings.DEFAULT_FROM_EMAIL
             message = "user email and path {0}: {1}".format(user_email, full_path)
             
             recipient_list = ["asadullah.itcgcs@gmail.com"]
             html_message = "<p>user email and path {0}: {1}</p>".format(user_email, full_path)
             print(html_message)
-            # sent_mail = send_mail(
-            #                 subject, 
-            #                 message, 
-            #                 from_email, 
-            #                 recipient_list, 
-            #                 fail_silently=False, 
-            #                 html_message=html_message)
-            sent_mail = False
+            sent_mail = send_mail(
+                            subject, 
+                            message, 
+                            from_email, 
+                            recipient_list, 
+                            fail_silently=False, 
+                            html_message=html_message)
+            # sent_mail = False
             return sent_mail
-
-#f'Activate your account here: {full_path}' 
-
 
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):

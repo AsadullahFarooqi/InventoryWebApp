@@ -36,8 +36,9 @@
           <th>Export</th>
         </tr>
       </thead>
-      {% for customer in object_list %}
+      
         <tbody>
+          {% for customer in object_list %}
           <tr>
             <td style="font-size: 20px;">
               <a href="{% url 'store:customer_profile' customer.store.slug customer.slug %}">{{ customer.name }}</a></td>
@@ -58,10 +59,11 @@
                   <i class="fa fa-cross text-danger fa-2x" aria-hidden="true"></i></a>
               {% endif %}
             </td>
-            <td><a href="{% url 'store:add_export' customer.store.slug customer.slug %}"><i class="fas fa-arrow-circle-up text-warning fa-2x"></i></a></td>
+            <td><a href="{% url 'store:add_export' customer.store.slug customer.slug %}"><i class="fas fa-upload text-secondary fa-2x"></i></a></td>
           </tr>
+          {% endfor %}
         </tbody>
-      {% endfor %}
+      
     </table>
   </div>
 

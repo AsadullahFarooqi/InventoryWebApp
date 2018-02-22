@@ -148,7 +148,7 @@ class ContainersTypes(models.Model):
 	width 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	depth 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	container_use_for = models.ForeignKey(Products, related_name="contianer_types" , blank=True, null=True,)
-	material_container_made_of = models.CharField(max_length=50, choices=types_of_materials)
+	material_container_made_of = models.CharField(blank=True, null=True, max_length=50, choices=types_of_materials)
 	timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	class Meta(object):
@@ -158,8 +158,9 @@ class ContainersTypes(models.Model):
 
 	@property
 	def container_volume(self):
-		return self.depth * self.width * self.length
-
+		if self.depth and self.width and self.length:
+			return self.depth * self.width * self.length
+		return 0
 	def __str__(self):
 		return str(self.container_use_for) + str(self.length) + str(self.width) + str(self.depth)+ str(self.name)
 

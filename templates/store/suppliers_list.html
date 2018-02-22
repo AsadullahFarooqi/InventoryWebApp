@@ -36,8 +36,9 @@
           <th>Import</th>
         </tr>
       </thead>
-      {% for supplier in object_list %}
+      
         <tbody>
+          {% for supplier in object_list %}
           <tr>
             <td style="font-size: 20px;"><a href="{% url 'store:supplier_profile' supplier.store.slug supplier.slug %}"> {{ supplier.name }}</a></td>
             <td>{{ supplier.address }}</td>
@@ -59,10 +60,11 @@
                 </a>
               {% endif %}
             </td>
-            <td><a href="{% url 'store:add_import' supplier.store.slug supplier.slug %}"><i class="fas fa-arrow-circle-down text-warning fa-2x"></i></a></td>
+            <td><a href="{% url 'store:add_import' supplier.store.slug supplier.slug %}"><i class="fas fa-download text-secondary fa-2x"></i></a></td>
           </tr>
+          {% endfor %}
         </tbody>
-      {% endfor %}
+      
     </table>
   </div>
 
