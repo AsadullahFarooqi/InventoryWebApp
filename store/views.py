@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 
+from company.models import Company
 
 from .forms import (
 CustomerForm,
@@ -208,6 +209,7 @@ class SupplierPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
 def dashboard(request, store_slug=None):
 
 	store = get_object_or_404(Store, slug=store_slug)
+	# store = Company.objects.get(slug=company_slug).stores.get(slug=store_slug)
 	if not (store.company in request.user.profile.companies.all()):
 		raise Http404
 	template_name = "store/dashboard.html"

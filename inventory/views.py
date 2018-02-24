@@ -21,7 +21,7 @@ def user_home_page(request):
 			store = Store.objects.get(company=user_company)
 			return HttpResponseRedirect(reverse_lazy("store:dashboard", kwargs={"store_slug":store.slug }))
 		elif len(stores) > 1:
-			return HttpResponseRedirect(reverse_lazy("company:stores_list", kwargs={"company_slug": user_company.slug}))
+			return HttpResponseRedirect(reverse_lazy("company:stores_list", kwargs={ "owner_slug": user_company.owner.slug , "company_slug": user_company.slug}))
 		elif len(stores) < 1:
 			return HttpResponseRedirect(reverse_lazy("company:add_store", kwargs={"company_slug": user_company.slug}))
 

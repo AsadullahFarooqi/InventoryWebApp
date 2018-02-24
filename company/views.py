@@ -123,7 +123,7 @@ def companies_list_view(request, owner_slug=None):
 
 
 @login_required
-def stores_list_view(request, company_slug=None):
+def stores_list_view(request, owner_slug=None, company_slug=None):
 	if not (Company.objects.get(slug=company_slug) in request.user.profile.companies.all()):
 			raise Http404
 
@@ -186,9 +186,9 @@ class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	success_message = "Store is successfully updated"
 
 	def get_object(self, **kwargs):
-		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.profile.companies.all()):
+		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
 			raise Http404
-		self.object = Stores.objects.get(slug= self.kwargs["store_slug"])
+		self.object = Store.objects.get(slug= self.kwargs["store_slug"])
 		return self.object
 
 	def get_context_data(self, *args, **kwargs):
@@ -198,7 +198,7 @@ class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 	def form_valid(self, form):
 		obj = form.save(commit=False)
-		obj.company = Company.objects.get(slug=self.kwargs["company_slug"])
+		obj.company = Store.objects.get(slug=self.kwargs["store_slug"])
 
 		return super(StoreUpdateView, self).form_valid(form)
 
@@ -209,10 +209,10 @@ class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 ######################################################################################################################
 
 @login_required
-def company_delete_view(request, company_slug=None):
-	if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.companies.all()):
+def company_delete_view(request, owner_slug=None, company_slug=None):
+	if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.profile.companies.all()):
 		raise Http404
-	obj = get_object_or_404(Stores, slug=store_slug)
+	obj = get_object_or_404(Company, slug=company_slug)
 	
 	company_slug = obj.company.slug
 	obj.delete()
@@ -221,9 +221,10 @@ def company_delete_view(request, company_slug=None):
 
 @login_required
 def store_delete_view(request, store_slug=None):
-	obj = get_object_or_404(Stores, slug=store_slug)
-	if not (Store.objects.get(slug=obj.company) in request.user.companies.all()):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
+
+	obj = get_object_or_404(Store, slug=store_slug)
 	company_slug = obj.company.slug
 	obj.delete()
 
