@@ -78,27 +78,73 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
 			raise Http404
 		return self.object
 
+@login_required
+def companies_list_view(request, owner_slug=None):
+	# if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+	# 		raise Http404
 
-class CompaniesListView(LoginRequiredMixin, ListView):
+	queryset_list = request.user.profile.companies.all() #.order_by("-timestamp")
+
+	query = request.GET.get("q")
+	
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(name__icontains=query)|
+				Q(email__icontains=query)|
+				Q(location__icontains=query) 
+				).distinct()		
+
+
 	template_name = "company/companies_list.html"
+	context = {
+	"object_list": queryset_list,
+	}
 
-	def get_queryset(self):
+	return render(request, template_name, context)
+
+# class CompaniesListView(LoginRequiredMixin, ListView):
+# 	template_name = "company/companies_list.html"
+
+# 	def get_queryset(self):
 		
-		profile = self.request.user.profile.companies
-		return Company.objects.get(slug=slug).stores.all()
+# 		profile = self.request.user.profile.companies
+# 		return Company.objects.get(slug=slug).stores.all()
 
 
 
-class StoresListView(LoginRequiredMixin, ListView):
-	template_name = "store/stores_list.html"
+# class StoresListView(LoginRequiredMixin, ListView):
+# 	template_name = "store/stores_list.html"
 
-	def get_queryset(self):
-		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in self.request.user.companies.all()):
+# 	def get_queryset(self):
+# 		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in self.request.user.companies.all()):
+# 			raise Http404
+# 		slug = self.kwargs["company_slug"]
+# 		return Company.objects.get(slug=slug).stores.all()
+
+
+@login_required
+def stores_list_view(request, company_slug=None):
+	if not (Company.objects.get(slug=company_slug) in request.user.profile.companies.all()):
 			raise Http404
-		slug = self.kwargs["company_slug"]
-		return Company.objects.get(slug=slug).stores.all()
+
+	queryset_list = Company.objects.get(slug=company_slug).stores.all() #.order_by("-timestamp")
+
+	query = request.GET.get("q")
+	
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(name__icontains=query)|
+				Q(address__icontains=query)|
+				Q(location__icontains=query) 
+				).distinct()		
 
 
+	template_name = "store/stores_list.html"
+	context = {
+	"object_list": queryset_list,
+	}
+
+	return render(request, template_name, context)
 
 
 ######################################################################################################################
@@ -106,18 +152,18 @@ class StoresListView(LoginRequiredMixin, ListView):
 ######################################################################################################################
 
 class CompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-	template_name = "store/create_form.html"
+	template_name = "store/update_form.html"
 	form_class = CompanyForm
 	success_message = "Company is successfully updated"
 
 	def get_object(self, **kwargs):
-		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in self.request.user.companies.all()):
+		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in self.request.user.profile.companies.all()):
 			raise Http404
 		self.object = Company.objects.get(slug= self.kwargs["company_slug"])
 		return self.object
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(AddCompanyCreateView, self).get_context_data(*args, **kwargs)
+		context = super(CompanyUpdateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Company"
 		return context
 
@@ -127,7 +173,7 @@ class CompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 			return Http404
 
 		obj.user = self.request.user
-		return super(AddCompanyCreateView, self).form_valid(form)
+		return super(CompanyUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
 		return reverse("company:company_details", kwargs={'company_slug': self.object.slug})
@@ -135,18 +181,18 @@ class CompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-	template_name = "store/create_form.html"
+	template_name = "store/update_form.html"
 	form_class = StoreForm
 	success_message = "Store is successfully updated"
 
 	def get_object(self, **kwargs):
-		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.companies.all()):
+		if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.profile.companies.all()):
 			raise Http404
 		self.object = Stores.objects.get(slug= self.kwargs["store_slug"])
 		return self.object
 
 	def get_context_data(self, *args, **kwargs):
-		context = super(AddStoreUpdateView, self).get_context_data(*args, **kwargs)
+		context = super(StoreUpdateView, self).get_context_data(*args, **kwargs)
 		context["page_of"] = "Store"
 		return context
 
@@ -154,7 +200,7 @@ class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		obj = form.save(commit=False)
 		obj.company = Company.objects.get(slug=self.kwargs["company_slug"])
 
-		return super(AddStoreUpdateView, self).form_valid(form)
+		return super(StoreUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
 		return reverse("store:dashboard", kwargs={ "store_slug": self.object.slug, })
