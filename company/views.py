@@ -97,6 +97,7 @@ def companies_list_view(request, owner_slug=None):
 
 	template_name = "company/companies_list.html"
 	context = {
+
 	"object_list": queryset_list,
 	}
 
@@ -141,6 +142,7 @@ def stores_list_view(request, owner_slug=None, company_slug=None):
 
 	template_name = "store/stores_list.html"
 	context = {
+	"company_slug": company_slug,
 	"object_list": queryset_list,
 	}
 
@@ -210,17 +212,16 @@ class StoreUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 @login_required
 def company_delete_view(request, owner_slug=None, company_slug=None):
-	if not (Company.objects.get(slug=self.kwargs["company_slug"]) in request.user.profile.companies.all()):
+	if not (Company.objects.get(slug=company_slug) in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Company, slug=company_slug)
 	
-	company_slug = obj.company.slug
 	obj.delete()
 	messages.success(request, "Successfully Deleted")
-	return HttpResponseRedirect(reverse("company:companies_list",))
+	return HttpResponseRedirect(reverse_lazy("company:companies_list", kwargs={"owner_slug": owner_slug}))
 
 @login_required
-def store_delete_view(request, store_slug=None):
+def store_delete_view(request, company_slug=None, store_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 
@@ -230,4 +231,4 @@ def store_delete_view(request, store_slug=None):
 
 	messages.success(request, "Successfully Deleted")
 
-	return HttpResponseRedirect(reverse("company:stores_list", kwargs={"company_slug": company_slug, }))
+	return HttpResponseRedirect(reverse_lazy("company:stores_list", kwargs={"owner_slug":request.user.profile.slug, "company_slug": company_slug, }))

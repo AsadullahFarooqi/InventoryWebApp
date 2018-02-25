@@ -26,7 +26,7 @@ def user_home_page(request):
 			return HttpResponseRedirect(reverse_lazy("company:add_store", kwargs={"company_slug": user_company.slug}))
 
 	elif len(user_companies) > 1:
-		return HttpResponseRedirect(reverse_lazy("company:list_companies", kwargs={"owner_slug": request.user.profile.slug }))
+		return HttpResponseRedirect(reverse_lazy("company:companies_list", kwargs={"owner_slug": request.user.profile.slug }))
 
 
 

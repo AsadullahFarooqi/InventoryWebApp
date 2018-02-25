@@ -15,7 +15,7 @@ from .models import (
 						)
 
 
-this_year = datetime.date.today().year
+this_year = datetime.date.today().year + 1
 
 
 class CustomerForm(forms.ModelForm):

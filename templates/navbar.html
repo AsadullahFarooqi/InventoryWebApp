@@ -36,12 +36,13 @@
       </a>
     </form>
     {% else %}
-      <li class="nav-item active ">
-        <a class="nav-link float-right" href="{% url 'login' %}">
+    </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <a class="form-control btn btn-outline-light my-2 my-sm-0" href="{% url 'login' %}">
           LogIn <span class="sr-only">(current)</span>
         </a>
-      </li>
-    </ul>
+      </form>
+
     {% endif %}
 
   </div>

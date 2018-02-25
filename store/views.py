@@ -285,7 +285,7 @@ def export_details_view(request, store_slug=None, export_slug=None):
 ######################### LIST VIEWS *********************************
 
 @login_required
-def customer_list_view(request, store_slug):
+def customer_list_view(request, store_slug = None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 			raise Http404
 
@@ -304,12 +304,13 @@ def customer_list_view(request, store_slug):
 	template_name = "store/customers_list.html"
 	context = {
 	"object_list": queryset_list,
+	"store_slug": store_slug,
 	}
 
 	return render(request, template_name, context)
 
 @login_required
-def supplier_list_view(request, store_slug):
+def supplier_list_view(request, store_slug = None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 			raise Http404
 
@@ -328,6 +329,7 @@ def supplier_list_view(request, store_slug):
 	template_name = "store/suppliers_list.html"
 	context = {
 	"object_list": queryset_list,
+	"store_slug": store_slug,
 	}
 
 	return render(request, template_name, context)
