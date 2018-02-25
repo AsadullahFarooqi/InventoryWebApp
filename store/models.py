@@ -140,17 +140,18 @@ class ContainersTypes(models.Model):
 							("Steel", "Steel",),
 							("Alumenium", "Alumenium",)]
 
-	name = models.CharField(max_length=10)
 	store = models.ForeignKey(Store, related_name="types_of_containers")
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	
+	name = models.CharField(max_length=10)
+	container_use_for = models.ForeignKey(Products, related_name="contianer_types" , blank=True, null=True,)
 	approximate_weight_container_holds = models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in kg!")
 	length 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	width 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	depth 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
-	container_use_for = models.ForeignKey(Products, related_name="contianer_types" , blank=True, null=True,)
-	material_container_made_of = models.CharField(blank=True, null=True, max_length=50, choices=types_of_materials)
+	material_container_made_of = models.CharField(blank=True, null=True, max_length=50)
 	timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
 
+	slug = models.SlugField(unique=True, blank=True, null=True)
 	class Meta(object):
 		verbose_name_plural = "Types of Containers"
 		ordering = ["-timestamp"]
