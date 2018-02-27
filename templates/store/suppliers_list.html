@@ -11,9 +11,21 @@
 
     <div class="collapse navbar-collapse" id="secondNav">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a href="{% url 'store:add_supplier' store_slug %}" class="nav-link ">Add Supplier <i class="fas fa-plus mr-3"></i></a>
+        <li class="nav-item ">
+          <a href="{% url 'store:add_customer' store_slug %}" class="nav-link "> <i class="fas fa-plus mr-3"></i>Add Customer</a>
         </li>
+
+       <li>
+         <a href="{% url 'store:add_product' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Add Product</a>
+       </li> 
+              
+        <li>
+          <a href="{% url 'store:add_customer' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Add Customer</a>
+        </li>
+
+        <li>
+          <a href="{% url 'store:add_supplier' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Add Supplier</a>
+        </li> 
         
       </ul>
       <form method='GET' action='' class="form-inline my-2 my-lg-0">
@@ -49,7 +61,7 @@
             <td>{{ supplier.payments_should_be_paid }}</td>
             <td><a href="{% url 'store:update_supplier' supplier.store.slug supplier.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}">
               <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
             <td>
               {% if supplier.paid_payments >= supplier.payments_should_be_paid %}

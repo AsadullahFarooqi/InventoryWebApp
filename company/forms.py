@@ -5,7 +5,7 @@ from store.models import Store
 from .models import Company
 
 
-this_year = datetime.date.today().year
+this_year = datetime.date.today().year + 1
 
 class CompanyForm(forms.ModelForm):
 

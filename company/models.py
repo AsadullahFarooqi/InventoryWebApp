@@ -3,9 +3,9 @@ import string
 
 from django.utils.text import slugify
 from django.db import models
-from .utils import unique_slug_generator
 from django.db.models.signals import pre_save
 
+from store.utils import unique_slug_generator
 from account.models import Profile
 
 # Create your models here.

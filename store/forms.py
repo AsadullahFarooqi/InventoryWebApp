@@ -7,7 +7,7 @@ from .models import (
 					Supplier,
 					Store,
 					Products,
-					ContainersTypes,
+					# ContainersTypes,
 					Imported,
 					Exported,
 					PaymentsOfCustomers,
@@ -38,11 +38,11 @@ class ProductsForm(forms.ModelForm):
 		model = Products
 		exclude = ["store",  "timestamp", "slug"]
 
-class ContainersTypesForm(forms.ModelForm):
+# class ContainersTypesForm(forms.ModelForm):
 
-	class Meta:
-		model = ContainersTypes
-		exclude = ["store",  "timestamp", "slug"]
+# 	class Meta:
+# 		model = ContainersTypes
+# 		exclude = ["store",  "timestamp", "slug"]
 
 class ImportedForm(forms.ModelForm):
 

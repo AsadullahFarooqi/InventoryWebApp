@@ -27,8 +27,7 @@
               </a>
               <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus mr-3"></i>Add Product</a>
-              <a href="{% url 'store:add_container_type' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-plus mr-3"></i>Add Type of Container</a>
+              
               <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus mr-3"></i>Add Customer </a>
               <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
@@ -78,16 +77,10 @@
               
               <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Products 
-
-
-     
                 <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
-              <a href="{% url 'store:containers_types_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Containers Types 
 
+              
 
-     
-                <span class="badge badge-primary float-right" > {{ total_types_of_containers }}</span></a>
               <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Suppliers Payments 
 

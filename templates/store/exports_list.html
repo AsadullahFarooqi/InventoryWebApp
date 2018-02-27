@@ -4,7 +4,9 @@
 
 {% block content %}
   <h4 class="h4">
-    List of all Exports
+    <strong>{{ customer }}</strong>
+    Exports List
+    
   </h4>
 
 <div class="table-responsive">
@@ -15,8 +17,12 @@
         <th>Infos</th>
         <th>Customer</th>
         <th>Product</th>
+        <th>Recipt #No</th>
         <th>Date</th>
         <th>Containers</th>
+        <th>Cost</th>
+        <th title="Price of single item" >Price <i class="fas fa-dollar-sign"></th>
+        <th>Total <i class="fas fa-dollar-sign"></th>
         <th>Edit</th>
         <th>Delete</th>
         
@@ -27,14 +33,23 @@
       <tr>
         <td><a href="{% url 'store:export_details' export.store.slug export.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
         <td><a href="{% url 'store:customer_profile' export.store.slug export.customer.slug %}">{{ export.customer }}</a></td>
-        <td>{{ export.containers_of }}</td>
-        <td>{{ export.date }}</td>
+        <td>{{ export.product }}</td>
+        <td>{{ export.customer_recipt_number }}</td>
+        <td>{{ export.date|date:"SHORT_DATE_FORMAT" }}</td>
         <td>{{ export.number_of_containers }}</td>
-        <td><a href="{% url 'store:update_export' export.store.slug export.customer.slug export.slug %}">
-          <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-        <td><a href="{% url 'store:delete_export' export.store.slug export.slug %}">
-          <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+        <td>{{ export.cost }}</td>
+        <td>{{ export.price_of_singal_item }}</td>
+        <td>{{ export.total_price }}</td>
         
+        <td>
+          <a href="{% url 'store:update_export' export.store.slug export.customer.slug export.slug %}">
+        <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
+        </a>
+        </td>
+        <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}">
+        <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
+        </a></td>
+            
       </tr>
     {% endfor %}
     </tbody>

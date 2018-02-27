@@ -12,7 +12,8 @@
       <thead>
         <tr>
           <th>Product name</th>
-          <th>Product Details</th>
+          <th>Container Type Use</th>
+          <th>Container Material</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -21,10 +22,11 @@
         {% for product in object_list %}
           <tr>
             <td>{{ product.name }}</td>
-            <td>{% if product.details %}{{ product.details }}{% else %} empty {% endif %}</td>
+            <td>{{ product.container_type_name }}</td>
+            <td>{{ product.material_container_made_of }}</td>
             <td><a href="{% url 'store:update_product' product.store.slug product.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a href="{% url 'store:delete_product' product.store.slug product.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_product' product.store.slug product.slug %}">
               <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}

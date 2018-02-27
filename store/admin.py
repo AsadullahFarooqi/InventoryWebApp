@@ -5,7 +5,7 @@ from .models import (
 					Customer,
 					Supplier,
 					Products,
-					ContainersTypes,
+					# ContainersTypes,
 					Imported,
 					Exported,
 					PaymentsToSuppliers,
@@ -20,6 +20,6 @@ admin.site.register(Supplier)
 admin.site.register(Products)
 admin.site.register(Imported)
 admin.site.register(Exported)
-admin.site.register(ContainersTypes)
+# admin.site.register(ContainersTypes)
 admin.site.register(PaymentsToSuppliers)
 admin.site.register(PaymentsOfCustomers)

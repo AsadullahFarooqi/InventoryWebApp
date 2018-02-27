@@ -18,7 +18,7 @@ from .forms import (
 CustomerForm,
 SupplierForm,
 ProductsForm,
-ContainersTypesForm,
+# ContainersTypesForm,
 ImportedForm,
 ExportedForm,
 ExportPaymentsForm,
@@ -31,7 +31,7 @@ Customer,
 Supplier,
 Store,
 Products,
-ContainersTypes,
+# ContainersTypes,
 Imported,
 Exported,
 PaymentsToSuppliers,
@@ -97,25 +97,25 @@ class ProductsCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 		return reverse("store:products_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 
-class ContainerTypesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-	template_name = "store/create_form.html"
-	form_class = ContainersTypesForm
-	success_message = "Successfully added!"
-	success_url = reverse_lazy("store:list_stores")
+# class ContainerTypesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+# 	template_name = "store/create_form.html"
+# 	form_class = ContainersTypesForm
+# 	success_message = "Successfully added!"
+# 	success_url = reverse_lazy("store:list_stores")
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(ContainerTypesCreateView, self).get_context_data(*args, **kwargs)
-		context["page_of"] = "Container Type"
-		return context
+# 	def get_context_data(self, *args, **kwargs):
+# 		context = super(ContainerTypesCreateView, self).get_context_data(*args, **kwargs)
+# 		context["page_of"] = "Container Type"
+# 		return context
 
-	def form_valid(self, form):
-		obj = form.save(commit=False)
-		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+# 	def form_valid(self, form):
+# 		obj = form.save(commit=False)
+# 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 
-		return super(ContainerTypesCreateView, self).form_valid(form)
+# 		return super(ContainerTypesCreateView, self).form_valid(form)
 
-	def get_success_url(self):
-		return reverse("store:containers_types_list", kwargs={"store_slug": self.kwargs["store_slug"] })
+# 	def get_success_url(self):
+# 		return reverse("store:containers_types_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 class ImportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
@@ -221,7 +221,7 @@ def dashboard(request, store_slug=None):
 	"total_imports": Store.objects.get(slug=store_slug).store_imports.all().count(),
 	"total_exports": Store.objects.get(slug=store_slug).store_exports.all().count(),
 	"total_products": Store.objects.get(slug=store_slug).products.all().count(),
-	"total_types_of_containers": Store.objects.get(slug=store_slug).types_of_containers.all().count(),
+	# "total_types_of_containers": Store.objects.get(slug=store_slug).types_of_containers.all().count(),
 	"total_import_payments": Store.objects.get(slug=store_slug).store_import_payments.all().count(),
 	"total_export_payments": Store.objects.get(slug=store_slug).store_export_payments.all().count(),
 	}
@@ -242,21 +242,71 @@ def customer_profile_view(request, store_slug=None, customer_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	customer = get_object_or_404(Customer, slug=customer_slug)
+
+	products = {}
+	
+	for i in customer.products:
+		products[i] = sum(customer.customer_exports.filter(product=Products.objects.get(name=i).id).values_list("number_of_containers", flat=True))
+
 	template_name = "store/customer_profile.html"
 	context = {
 	"customer": customer,
+	"products": products
 	}
 	return render(request, template_name, context)
+
 
 @login_required
 def supplier_profile_view(request, store_slug=None, supplier_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
+	
 	supplier = get_object_or_404(Supplier, slug=supplier_slug)
+
+	products = {}
+	
+	for i in supplier.products:
+		products[i] = sum(supplier.supplier_imports.filter(product=Products.objects.get(name=i).id).values_list("number_of_containers", flat=True))
+
+
 	template_name = "store/supplier_profile.html"
 	context = {
 	"supplier": supplier,
+	"products": products
 	}
+	return render(request, template_name, context)
+
+@login_required
+def customer_product_imports_list(request, store_slug=None, customer_slug=None, cus_product=None):
+
+	customer = get_object_or_404(Customer, slug=customer_slug)
+
+	if not (customer.store.company in request.user.profile.companies.all()):
+		raise Http404
+
+	template_name = "store/exports_list.html"
+	context = {
+	"customer": customer.name,
+	"object_list": customer.customer_exports.filter(product=Products.objects.get(name=cus_product).id)
+	}
+
+	return render(request, template_name, context)
+
+
+@login_required
+def supplier_product_imports_list(request, supplier_slug=None, sup_product=None):
+
+	supplier = get_object_or_404(Supplier, slug=supplier_slug)
+
+	if not (supplier.store.company in request.user.profile.companies.all()):
+		raise Http404
+
+	template_name = "store/imports_list.html"
+	context = {
+	"supplier": supplier.name,
+	"object_list": supplier.supplier_imports.filter(product=Products.objects.get(name=sup_product).id)
+	}
+
 	return render(request, template_name, context)
 
 @login_required
@@ -371,14 +421,14 @@ class ProductsListView(LoginRequiredMixin, ListView):
 		slug = self.kwargs["store_slug"]
 		return Store.objects.get(slug=slug).products.all()
 
-class ContainerTypesListView(LoginRequiredMixin, ListView):
-	template_name = "store/containers_types_list.html"
+# class ContainerTypesListView(LoginRequiredMixin, ListView):
+# 	template_name = "store/containers_types_list.html"
 
-	def get_queryset(self):
-		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
-			raise Http404
-		slug = self.kwargs["store_slug"]
-		return Store.objects.get(slug=slug).types_of_containers.all()
+# 	def get_queryset(self):
+# 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+# 			raise Http404
+# 		slug = self.kwargs["store_slug"]
+# 		return Store.objects.get(slug=slug).types_of_containers.all()
 
 class ImportedListView(LoginRequiredMixin, ListView):
 	template_name = "store/imports_list.html"
@@ -504,30 +554,30 @@ class ProductsUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		return reverse("store:products_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 
-class ContainerTypesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-	form_class = ContainersTypesForm
-	template_name = "store/update_form.html"
-	success_message = "Update is Successfully done!."
+# class ContainerTypesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+# 	form_class = ContainersTypesForm
+# 	template_name = "store/update_form.html"
+# 	success_message = "Update is Successfully done!."
 
-	def get_object(self, **kwargs):
-		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
-			raise Http404
-		self.object = ContainersTypes.objects.get(slug= self.kwargs["container_type_slug"])
-		return self.object
+# 	def get_object(self, **kwargs):
+# 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+# 			raise Http404
+# 		self.object = ContainersTypes.objects.get(slug= self.kwargs["container_type_slug"])
+# 		return self.object
 
-	def get_context_data(self, *args, **kwargs):
-		context = super(ContainerTypesUpdateView, self).get_context_data(*args, **kwargs)
-		context["page_of"] = "Container Type"
-		return context
+# 	def get_context_data(self, *args, **kwargs):
+# 		context = super(ContainerTypesUpdateView, self).get_context_data(*args, **kwargs)
+# 		context["page_of"] = "Container Type"
+# 		return context
 
-	def form_valid(self, form):
-		obj = form.save(commit=False)
-		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
+# 	def form_valid(self, form):
+# 		obj = form.save(commit=False)
+# 		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
 
-		return super(ContainerTypesUpdateView, self).form_valid(form)
+# 		return super(ContainerTypesUpdateView, self).form_valid(form)
 
-	def get_success_url(self):
-		return reverse("store:containers_types_list", kwargs={"store_slug": self.kwargs["store_slug"] })
+# 	def get_success_url(self):
+# 		return reverse("store:containers_types_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 class ImportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	template_name = "store/update_form.html"
@@ -675,16 +725,16 @@ def products_delete_view(request, store_slug=None, product_slug=None):
 	return HttpResponseRedirect(reverse("store:products_list", kwargs={'store_slug': store_slug, }))
 
 
-@login_required
-def container_type_delete_view(request, store_slug=None, container_type_slug=None):
-	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
-		raise Http404
-	obj = get_object_or_404(ContainersTypes, slug=container_type_slug)
-	obj.delete()
+# @login_required
+# def container_type_delete_view(request, store_slug=None, container_type_slug=None):
+# 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+# 		raise Http404
+# 	obj = get_object_or_404(ContainersTypes, slug=container_type_slug)
+# 	obj.delete()
 
-	messages.success(request, "Container Type is Successfully deleted!")
+# 	messages.success(request, "Container Type is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:containers_types_list", kwargs={'store_slug': store_slug, }))
+# 	return HttpResponseRedirect(reverse("store:containers_types_list", kwargs={'store_slug': store_slug, }))
 
 @login_required
 def import_delete_view(request, store_slug=None, import_slug=None):

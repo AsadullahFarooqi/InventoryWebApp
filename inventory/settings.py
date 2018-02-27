@@ -101,16 +101,16 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 # }
 
 ############ PostgreSQL
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'practice_database',
-        'USER': 'practice_user',
-        'PASSWORD': 'i4cu.i4cu.',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'practice_database',
+#         'USER': 'practice_user',
+#         'PASSWORD': 'i4cu.i4cu.',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 ############ Mysql
 # DATABASES = {
@@ -123,6 +123,17 @@ DATABASES = {
 #         'PORT': '',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'practice_database',
+        'USER': 'practice_user',
+        'PASSWORD': 'i4cu.i4cu.',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 
 # Password validation
@@ -175,12 +186,12 @@ LOGOUT_REDIRECT_URL = reverse_lazy("login")
 LOGIN_URL = reverse_lazy("login")
 LOGOUT_URL = reverse_lazy("logout")
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "asadullah.itcgcs@gmail.com"
-EMAIL_HOST_PASSWORD = "I4cu___..."
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'asadullah.itcgcs@gmail.com'
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_HOST_USER = "asadullah.itcgcs@gmail.com"
+# EMAIL_HOST_PASSWORD = "I4cu___..."
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'asadullah.itcgcs@gmail.com'
 ADMINS = (
     ("asadullah.itcgcs@gmail.com"),
     )
