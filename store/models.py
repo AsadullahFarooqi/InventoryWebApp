@@ -49,16 +49,6 @@ class Customer(models.Model):
 	class Meta(object):
 		verbose_name_plural = "Customers"
 		ordering = ["-name"]
-
-	@property
-	def products(self):
-
-		prod = []
-
-		for i in self.customer_exports.values_list("product", flat=True):
-			prod.append(Products.objects.get(id = i).name)
-
-		return set(prod)
 	
 	@property
 	def payments_should_be_paid(self):
@@ -104,16 +94,6 @@ class Supplier(models.Model):
 		for importt in self.supplier_imports.all():
 			payments += importt.total_price
 		return payments
-
-	@property
-	def products(self):
-
-		prod = []
-
-		for i in self.supplier_imports.values_list("product", flat=True):
-			prod.append(Products.objects.get(id = i).name)
-
-		return set(prod)
 
 	@property
 	def paid_payments(self):
@@ -184,9 +164,12 @@ class Products(models.Model):
 
 			return str(self.container_type_name) + str(self.material_container_made_of)
 
+	@property
+	def product_info(self):
+		return str(self.name) + " " + str(self.container_type_name) + " " + str(material_container_made_of)
 
 	def __str__(self):
-		return str(self.name) + str(self.container_type_name)
+		return self.name
 
 	# def get_absolute_url(self):
 	#     return reverse("store:store_details", kwargs={"slug": self.slug})
@@ -198,8 +181,12 @@ class Imported(models.Model):
 	supplier_recipt_number = models.BigIntegerField(blank=False, null=False)
 	supplier = models.ForeignKey(Supplier, related_name="supplier_imports")
 	truck_plate_number = models.CharField(blank=True, null=True, max_length=10)
+
 	product = models.ForeignKey(Products, related_name="product_imports")
+
 	number_of_containers =	models.IntegerField(blank=False, null=False)
+
+	product_name = models.CharField(blank=True, null=True, max_length=55)
 	# type_of_containers = models.ForeignKey(ContainersTypes, related_name="contaner_type_imports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
@@ -234,6 +221,9 @@ class Exported(models.Model):
 	truck_plate_number = models.CharField(blank=True, null=True, max_length=10)
 	product = models.ForeignKey(Products, related_name="product_exports")
 	number_of_containers =	models.IntegerField(blank=False, null=False)
+
+	product_name = models.CharField(blank=True, null=True, max_length=55)
+
 	# type_of_containers = models.ForeignKey(ContainersTypes, related_name="contaner_type_exports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
@@ -302,16 +292,22 @@ class PaymentsToSuppliers(models.Model):
 
 
 def pre_save_slug(sender, instance, *args, **kwargs):
+	
 	if not instance.slug:
 		instance.slug = unique_slug_generator(instance)
 
+def pre_save_imp_exp(sender, instance, *args, **kwargs):
+	if not instance.product_name:
+		instance.product_name = instance.product.name
+	if not instance.slug:
+		instance.slug = unique_slug_generator(instance)
 
 pre_save.connect(pre_save_slug, sender=Customer)
 pre_save.connect(pre_save_slug, sender=Supplier)
 pre_save.connect(pre_save_slug, sender=Store)
 pre_save.connect(pre_save_slug, sender=Products)
 # pre_save.connect(pre_save_slug, sender=ContainersTypes)
-pre_save.connect(pre_save_slug, sender=Imported)
-pre_save.connect(pre_save_slug, sender=Exported)
+pre_save.connect(pre_save_imp_exp, sender=Imported)
+pre_save.connect(pre_save_imp_exp, sender=Exported)
 pre_save.connect(pre_save_slug, sender=PaymentsOfCustomers)
 pre_save.connect(pre_save_slug, sender=PaymentsToSuppliers)

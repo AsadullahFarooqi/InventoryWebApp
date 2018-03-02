@@ -244,10 +244,9 @@ def customer_profile_view(request, store_slug=None, customer_slug=None):
 	customer = get_object_or_404(Customer, slug=customer_slug)
 
 	products = {}
+	for i in set(customer.customer_exports.values_list("product_name", flat=True)):
+		products[i] = sum(customer.customer_exports.filter(product_name=i).values_list("number_of_containers", flat=True))
 	
-	for i in customer.products:
-		products[i] = sum(customer.customer_exports.filter(product=Products.objects.get(name=i).id).values_list("number_of_containers", flat=True))
-
 	template_name = "store/customer_profile.html"
 	context = {
 	"customer": customer,
@@ -264,10 +263,10 @@ def supplier_profile_view(request, store_slug=None, supplier_slug=None):
 	supplier = get_object_or_404(Supplier, slug=supplier_slug)
 
 	products = {}
-	
-	for i in supplier.products:
-		products[i] = sum(supplier.supplier_imports.filter(product=Products.objects.get(name=i).id).values_list("number_of_containers", flat=True))
 
+	for i in set(supplier.supplier_imports.values_list("product_name", flat=True)):
+		products[i] = sum(supplier.supplier_imports.filter(product_name=i).values_list("number_of_containers", flat=True))
+	
 
 	template_name = "store/supplier_profile.html"
 	context = {
@@ -287,7 +286,7 @@ def customer_product_imports_list(request, store_slug=None, customer_slug=None, 
 	template_name = "store/exports_list.html"
 	context = {
 	"customer": customer.name,
-	"object_list": customer.customer_exports.filter(product=Products.objects.get(name=cus_product).id)
+	"object_list": customer.customer_exports.filter(product_name=cus_product)
 	}
 
 	return render(request, template_name, context)
@@ -304,7 +303,7 @@ def supplier_product_imports_list(request, supplier_slug=None, sup_product=None)
 	template_name = "store/imports_list.html"
 	context = {
 	"supplier": supplier.name,
-	"object_list": supplier.supplier_imports.filter(product=Products.objects.get(name=sup_product).id)
+	"object_list": supplier.supplier_imports.filter(product_name=sup_product)
 	}
 
 	return render(request, template_name, context)
@@ -626,7 +625,6 @@ class ExportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
-
 
 		return super(ExportUpdateView, self).form_valid(form)
 

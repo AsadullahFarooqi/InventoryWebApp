@@ -49,14 +49,14 @@ class ImportedForm(forms.ModelForm):
 	date = forms.DateField(widget=forms.SelectDateWidget(years = tuple(range(this_year - 40, this_year))))
 	class Meta:
 		model = Imported
-		exclude = ["store",  "supplier", "timestamp", "slug"]
+		exclude = ["store",  "supplier", "product_name", "timestamp", "slug"]
 
 class ExportedForm(forms.ModelForm):
 
 	date = forms.DateField(widget=forms.SelectDateWidget(years = tuple(range(this_year - 40, this_year))))
 	class Meta:
 		model = Exported
-		exclude = ["store", "customer", "timestamp", "slug"]
+		exclude = ["store", "customer", "product_name", "timestamp", "slug"]
 
 
 class ExportPaymentsForm(forms.ModelForm):
