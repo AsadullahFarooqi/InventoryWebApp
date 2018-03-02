@@ -1,12 +1,11 @@
 import random
 import string
 
-from django.core.mail import send_mail
-from django.core.urlresolvers import reverse_lazy, reverse
+# from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
-from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 
 
@@ -32,26 +31,23 @@ class Profile(models.Model):
             self.save()
             user_email = self.user.email
             path_ = reverse("user_activation", kwargs={"code": self.activation_key})
-            full_path = "http://asadliam.pythonanywhere.com" + path_
-            print(full_path)
-            subject = "User Account Activation"
-            from_email = settings.DEFAULT_FROM_EMAIL
-            message = "user email and path {0}: {1}".format(user_email, full_path)
-            
-            recipient_list = ["asadullah.itcgcs@gmail.com"]
-            html_message = "<p>user email and path {0}: {1}</p>".format(user_email, full_path)
+            full_path = settings.ALLOWED_HOSTS[0] + path_
+            # subject = "User Account Activation"   #"http://asadliam.pythonanywhere.com"
+            # from_email = settings.DEFAULT_FROM_EMAIL
+            # message = "user email and path {0}: {1}".format(user_email, full_path)
+            # recipient_list = ["asadullah.itcgcs@gmail.com"]
+            # html_message = "<p>user email and path {0}: {1}</p>".format(user_email, full_path)
 
-            with open( settings.BASE_DIR + '/AppliedUsers.csv', 'a') as csvfile:
+            with open("/home/AsadLiam/forgithub/inventory/AppliedUsers.csv", 'a') as csvfile:
                 csvfile.write(str(str(self.user.username) + " , " + str(user_email) + " , " + str("Activation Key :: " + full_path) + " , " + self.user.first_name) + " , " + str(self.user.last_name)  + "\n")
-                
 
             # print(html_message)
             # sent_mail = send_mail(
-            #                 subject, 
-            #                 message, 
-            #                 from_email, 
-            #                 recipient_list, 
-            #                 fail_silently=False, 
+            #                 subject,
+            #                 message,
+            #                 from_email,
+            #                 recipient_list,
+            #                 fail_silently=False,
             #                 html_message=html_message)
             sent_mail = False
             return sent_mail

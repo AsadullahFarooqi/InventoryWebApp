@@ -23,16 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = 'g*)%=5)scyywb0&8-!3vl$%+zq6sj%-uah)l2dj2*)lg*ovsie'
-# with open("/home/AsadLiam/forgithub/inventory/inventory/secret_key.txt") as f:
-#      SECRET_KEY = f.read().strip()
+with open("/home/AsadLiam/forgithub/inventory/inventory/secret_key.txt") as f:
+     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-# DEBUG = False
+DEBUG = False
 
-# ALLOWED_HOSTS = ["AsadLiam.pythonanywhere.com"]
+ALLOWED_HOSTS = ["AsadLiam.pythonanywhere.com"]
 
 
 # Application definition
@@ -92,48 +91,23 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-############ sqlite3
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'AsadLiam$dasawork_inventory',
+        'USER': 'AsadLiam',
+        'PASSWORD': 'i4cu.i4cu.',
+        'HOST': 'AsadLiam.mysql.pythonanywhere-services.com',
+        'PORT': '',
     }
 }
-
-############ PostgreSQL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'practice_database',
-#         'USER': 'practice_user',
-#         'PASSWORD': 'i4cu.i4cu.',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-
-############ Mysql
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'AsadLiam$dasawork_storeinventory',
-#         'USER': 'AsadLiam',
-#         'PASSWORD': 'i4cu.i4cu.',
-#         'HOST': 'AsadLiam.mysql.pythonanywhere-services.com',
-#         'PORT': '',
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'practice_database',
-#         'USER': 'practice_user',
-#         'PASSWORD': 'i4cu.i4cu.',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
 
 
 # Password validation

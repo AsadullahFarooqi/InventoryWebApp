@@ -24,10 +24,9 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/suppliers-list/$', views.supplier_list_view, name="suppliers_list"),
     url(r'^(?P<store_slug>[\w-]+)/customers-list/$', views.customer_list_view, name="customers_list"),
 
-    url(r'^(?P<supplier_slug>[\w-]+)/(?P<sup_product>[\w]+)/$', views.supplier_product_imports_list, name="supplier_product"),
+    url(r'^(?P<supplier_slug>[\w-]+)/(?P<sup_product>[\w]+[\s\w]+)/$', views.supplier_product_imports_list, name="supplier_product"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<cus_product>[\w]+[\s\w]+)/$', views.customer_product_imports_list, name="customer_product"),
 
-    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<cus_product>[\w]+)/$', views.customer_product_imports_list, name="customer_product"),
-    
     url(r'^(?P<store_slug>[\w-]+)/products-list/$', views.ProductsListView.as_view(), name="products_list"),
     # url(r'^(?P<store_slug>[\w-]+)/containers-types-list/$', views.ContainerTypesListView.as_view(), name="containers_types_list"),
 
@@ -38,7 +37,7 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/import-payments-list/$', views.ImportPaymentsListView.as_view(), name="import_payments_list"),
 
     ############## DETAIL VIEWS ******************
-    
+
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/customer-details/$', views.customer_profile_view, name="customer_profile"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/supplier-details/$', views.supplier_profile_view, name="supplier_profile"),
 

@@ -18,7 +18,7 @@ class Store(models.Model):
 	address = models.CharField(max_length=250, blank=True, null=True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
 	capacity = models.PositiveIntegerField(blank=True, null=True, help_text="containers the store can hold")
-	
+
 	timestamp = models.DateTimeField(auto_now_add=True)
 	store_is_active_from = models.DateField(auto_now=False, auto_now_add=False)
 
@@ -49,7 +49,7 @@ class Customer(models.Model):
 	class Meta(object):
 		verbose_name_plural = "Customers"
 		ordering = ["-name"]
-	
+
 	@property
 	def payments_should_be_paid(self):
 		payments = 0
@@ -60,7 +60,7 @@ class Customer(models.Model):
 	@property
 	def paid_payments(self):
 		return sum(self.customer_payments.values_list("amount", flat=True))
-	
+
 	@property
 	def payments_done_def(self):
 
@@ -70,9 +70,9 @@ class Customer(models.Model):
 			return False
 
 	def __str__(self):
-		return str(self.name) + str(self.last_name)
+		return str(self.name)
 
-	
+
 
 class Supplier(models.Model):
 	store = models.ForeignKey(Store, related_name="suppliers")
@@ -98,10 +98,10 @@ class Supplier(models.Model):
 	@property
 	def paid_payments(self):
 		return sum(self.supplier_payments.values_list("amount", flat=True))
-	
+
 	@property
 	def payments_done_def(self):
-		
+
 		if self.paid_payments >= sum(self.supplier_imports.values_list("total_price", flat=True)):
 			return True
 		else:
@@ -109,8 +109,7 @@ class Supplier(models.Model):
 
 
 	def __str__(self):
-		return str(self.name) + str(self.last_name)
-
+		return str(self.name)
 
 	# class Products(models.Model):
 	# 	store = models.ForeignKey(Store, related_name="products")
@@ -132,7 +131,7 @@ class Supplier(models.Model):
 class Products(models.Model):
 
 	store = models.ForeignKey(Store, related_name="products")
-	
+
 	name = models.CharField(max_length=50)
 	product_details = models.TextField(blank=True, null=True)
 
@@ -143,7 +142,7 @@ class Products(models.Model):
 	width 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	depth 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	material_container_made_of = models.CharField(blank=True, null=True, max_length=50)
-	
+
 	timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
 	slug = models.SlugField(unique=True, blank=True, null=True)
 
@@ -236,7 +235,7 @@ class Exported(models.Model):
 		verbose_name_plural = "Exports"
 		ordering = ["-timestamp"]
 
-	
+
 
 	@property
 	def total_price(self):
@@ -246,7 +245,7 @@ class Exported(models.Model):
 	def info(self):
 		return str(self.number_of_containers) + " " + str(self.product) + " " + str(self.exported_date)
 
-	
+
 
 	def __str__(self):
 			return str(self.product) + " " + str(self.date) + " " + str(self.customer)
@@ -292,7 +291,7 @@ class PaymentsToSuppliers(models.Model):
 
 
 def pre_save_slug(sender, instance, *args, **kwargs):
-	
+
 	if not instance.slug:
 		instance.slug = unique_slug_generator(instance)
 
