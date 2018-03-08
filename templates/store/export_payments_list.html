@@ -30,13 +30,13 @@
             <td><a href="{% url 'store:update_customer_payment' payment.store.slug payment.customer.slug payment.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
 
-            <td><a class="delete_button" href="{% url 'store:delete_customer_payment' payment.store.slug payment.customer.slug payment.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_customer_payment' payment.store.slug payment.customer.slug payment.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
-    
+
   </div>
 
 

@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <h3 >Supplier Info</h3> 
+    <h3 >Supplier Info</h3>
 
     <div class="row">
       <div class="col-sm-6">
@@ -31,7 +31,7 @@
             <tr>
               <th>Paid Payments</th>
               <td>{{ supplier.paid_payments }}</td>
-              
+
             </tr>
 
             <tr>
@@ -39,8 +39,8 @@
               <td>{{ supplier.payments_should_be_paid }}</td>
             </tr>
 
-            
-            
+
+
           </table>
         </div>
       </div>
@@ -55,14 +55,14 @@
               <th>Import</th>
               <td><a href="{% url 'store:add_import' supplier.store.slug supplier.slug %}"><i class="fas fa-download text-secondary fa-2x"></i></a></td>
             </tr>
-            
+
             <tr>
               <th>Edit/Update</th>
               <td><a href="{% url 'store:update_supplier' supplier.store.slug supplier.slug %}"><i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
             </tr>
             <tr>
               <th>Delete</th>
-              <td><a class="delete_button" href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+              <td><a class="delete_button" href="{% url 'store:delete_supplier' supplier.store.slug supplier.slug %}" onclick="return confirm_alert(this);"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
             </tr>
             <tr>
               <th>Payments Done/Not Done</th>
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-  
+
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" id="import-tab" data-toggle="tab" href="#import" role="tab" aria-controls="import" aria-selected="true">
@@ -112,7 +112,7 @@
             <th>Total <i class="fas fa-dollar-sign"></th>
             <th>Edit</th>
             <th>Delete</th>
-            
+
           </tr>
         </thead>
         <tbody>
@@ -128,7 +128,7 @@
               <td>{{ import.total_price }}</td>
               <td><a href="{% url 'store:update_import' import.store.slug supplier.slug import.slug %}">
                 <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-              <td><a class="delete_button" href="{% url 'store:delete_import' import.store.slug import.slug %}">
+              <td><a class="delete_button" href="{% url 'store:delete_import' import.store.slug import.slug %}" onclick="return confirm_alert(this);">
                 <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
             </tr>
           {% endfor %}
@@ -154,11 +154,11 @@
             <td>{{ payment.date|date:"SHORT_DATE_FORMAT" }}</td>
             <td><a href="{% url 'store:update_supplier_payment' supplier.store.slug supplier.slug payment.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a class="delete_button" href="{% url 'store:delete_supplier_payment' supplier.store.slug supplier.slug payment.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_supplier_payment' supplier.store.slug supplier.slug payment.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
           </tr>
           {% endfor %}
-          
+
         </tbody>
       </table>
     </div>
@@ -168,14 +168,14 @@
         <thead>
           <tr>
             <th>Products</th>
-            <th>Total Imports</th>            
+            <th>Total Imports</th>
           </tr>
         </thead>
         <tbody>
           {% for product_name, total_containers in products.items %}
           <tr>
             <td><a href="{% url 'store:supplier_product' supplier.slug product_name %}">{{ product_name }}</a></td>
-            <td>{{ total_containers }}</td>          
+            <td>{{ total_containers }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -183,7 +183,7 @@
     </div>
 
   </div>
-  
+
 
 
 {% endblock %}

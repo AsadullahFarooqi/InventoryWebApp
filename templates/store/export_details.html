@@ -17,19 +17,19 @@
           <tr>
             <th>Recipt Number from customer</th> <td>{{ export.customer_recipt_number}}</td>
           </tr>
-          
+
           <tr>
             <th>Date</th> <td>{{ export.date }}</td>
           </tr>
-          
+
           <tr>
             <th>Truck Number</th> <td>{{ export.truck_plate_number }}</td>
           </tr>
           <tr>
             <th>Product</th> <td>{{ export.containers_of }}</td>
           </tr>
-          
-          
+
+
         </table>
       </div>
       <div class="col-sm-6 table-responsive">
@@ -46,18 +46,18 @@
           <tr>
             <th># Of Containers</th> <td>{{ export.number_of_containers }}</td>
           </tr>
-          
+
           <tr>
             <th>Total Price</th> <td>{{ export.total_price }}</td>
           </tr>
-          
+
           <tr>
             <td>
               <a href="{% url 'store:update_export' export.store.slug export.customer.slug  export.slug %}">
-              
+
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a>
               </td>
-            <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i>
             </a></td>
 

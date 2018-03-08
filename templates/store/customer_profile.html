@@ -29,7 +29,7 @@
           <tr>
             <th>Paid Payments</th>
             <td>{{ customer.paid_payments }}</td>
-            
+
           </tr>
 
           <tr>
@@ -37,8 +37,8 @@
             <td>{{ customer.payments_should_be_paid }}</td>
           </tr>
 
-          
-          
+
+
         </table>
       </div>
     </div>
@@ -60,7 +60,7 @@
           </tr>
           <tr>
             <th>Delete</th>
-            <td><a class="delete_button" href="{% url 'store:delete_customer' customer.store.slug customer.slug %}"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+            <td><a class="delete_button" href="{% url 'store:delete_customer' customer.store.slug customer.slug %}" onclick="return confirm_alert(this);"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
           </tr>
           <tr>
               <th>Payments Done/Not Done</th>
@@ -83,12 +83,12 @@
       <span class="badge badge-primary ml-2 float-right">{{ customer.customer_exports.all.count }}</span></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false">Payments 
+      <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false">Payments
         <span class="badge badge-primary ml-2 float-right">{{ customer.customer_payments.all.count }}</span></a>
     </li>
-    
+
     <li class="nav-item">
-      <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="false">Products 
+      <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="false">Products
       </a>
     </li>
   </ul>
@@ -107,7 +107,7 @@
             <th>Total <i class="fas fa-dollar-sign"></th>
             <th>Edit</th>
             <th>Delete</th>
-            
+
           </tr>
         </thead>
         <tbody>
@@ -121,16 +121,16 @@
             <td>{{ export.cost }}</td>
             <td>{{ export.price_of_singal_item }}</td>
             <td>{{ export.total_price }}</td>
-            
+
             <td>
               <a href="{% url 'store:update_export' export.store.slug customer.slug export.slug %}">
             <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
             </a>
             </td>
-            <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
             <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
             </a></td>
-            
+
           </tr>
           {% endfor %}
         </tbody>
@@ -155,7 +155,7 @@
             <td>{{ payment.date }}</td>
             <td><a href="{% url 'store:update_customer_payment' customer.store.slug customer.slug payment.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a class="delete_button" href="{% url 'store:delete_customer_payment' customer.store.slug customer.slug payment.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_customer_payment' customer.store.slug customer.slug payment.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
           </tr>
           {% endfor %}
@@ -168,14 +168,14 @@
         <thead>
           <tr>
             <th>Products</th>
-            <th>Total Exports</th>            
+            <th>Total Exports</th>
           </tr>
         </thead>
         <tbody>
           {% for product_name, total_containers in products.items %}
           <tr>
             <td><a href="{% url 'store:customer_product' customer.store.slug customer.slug product_name %}">{{ product_name }}</a></td>
-            <td>{{ total_containers }}</td>          
+            <td>{{ total_containers }}</td>
           </tr>
           {% endfor %}
         </tbody>

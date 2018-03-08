@@ -39,13 +39,13 @@
             <td>{{ import.total_price }}</td>
             <td><a href="{% url 'store:update_import' import.store.slug import.supplier.slug import.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a class="delete_button" href="{% url 'store:delete_import' import.store.slug import.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_import' import.store.slug import.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}
       </tbody>
-      
-    </table>  
+
+    </table>
 
   </div>
 

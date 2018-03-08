@@ -6,7 +6,7 @@
   <h4 class="h4">
     <strong>{{ customer }}</strong>
     Exports List
-    
+
   </h4>
 
 <div class="table-responsive">
@@ -25,7 +25,7 @@
         <th>Total <i class="fas fa-dollar-sign"></th>
         <th>Edit</th>
         <th>Delete</th>
-        
+
       </tr>
     </thead>
     <tbody>
@@ -40,16 +40,16 @@
         <td>{{ export.cost }}</td>
         <td>{{ export.price_of_singal_item }}</td>
         <td>{{ export.total_price }}</td>
-        
+
         <td>
           <a href="{% url 'store:update_export' export.store.slug export.customer.slug export.slug %}">
         <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
         </a>
         </td>
-        <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}">
+        <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
         <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
         </a></td>
-            
+
       </tr>
     {% endfor %}
     </tbody>

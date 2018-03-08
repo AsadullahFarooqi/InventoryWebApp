@@ -26,12 +26,12 @@
             <td>{{ product.material_container_made_of }}</td>
             <td><a href="{% url 'store:update_product' product.store.slug product.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
-            <td><a class="delete_button" href="{% url 'store:delete_product' product.store.slug product.slug %}">
+            <td><a class="delete_button" href="{% url 'store:delete_product' product.store.slug product.slug %}" onclick="return confirm_alert(this);">
               <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}
       </tbody>
-      
+
     </table>
   </div>
 
