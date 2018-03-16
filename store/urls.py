@@ -33,8 +33,8 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/imports-list/$', views.ImportedListView.as_view(), name="imports_list"),
     url(r'^(?P<store_slug>[\w-]+)/exports-list/$', views.ExportedListView.as_view(), name="exports_list"),
 
-    url(r'^(?P<store_slug>[\w-]+)/export-payments-list/$', views.ExportPaymentsListView.as_view(), name="export_payments_list"),
-    url(r'^(?P<store_slug>[\w-]+)/import-payments-list/$', views.ImportPaymentsListView.as_view(), name="import_payments_list"),
+    url(r'^(?P<store_slug>[\w-]+)/export-payments-list/$', views.CustomerPaymentsListView.as_view(), name="export_payments_list"),
+    url(r'^(?P<store_slug>[\w-]+)/import-payments-list/$', views.SupplierPaymentsListView.as_view(), name="import_payments_list"),
 
     ############## DETAIL VIEWS ******************
 

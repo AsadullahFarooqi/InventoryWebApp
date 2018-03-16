@@ -31,14 +31,16 @@ class Profile(models.Model):
             self.save()
             user_email = self.user.email
             path_ = reverse("user_activation", kwargs={"code": self.activation_key})
-            full_path = settings.ALLOWED_HOSTS[0] + path_
+            # full_path = settings.ALLOWED_HOSTS[0] + path_
+            full_path = "http://127.0.0.1:8000" + path_
             # subject = "User Account Activation"   #"http://asadliam.pythonanywhere.com"
             # from_email = settings.DEFAULT_FROM_EMAIL
             # message = "user email and path {0}: {1}".format(user_email, full_path)
             # recipient_list = ["asadullah.itcgcs@gmail.com"]
             # html_message = "<p>user email and path {0}: {1}</p>".format(user_email, full_path)
 
-            with open("/home/AsadLiam/forgithub/inventory/AppliedUsers.csv", 'a') as csvfile:
+            # with open("/home/AsadLiam/forgithub/inventory/AppliedUsers.csv", 'a') as csvfile:
+            with open(settings.BASE_DIR + "/AppliedUsers.csv", 'a') as csvfile:
                 csvfile.write(str(str(self.user.username) + " , " + str(user_email) + " , " + str("Activation Key :: " + full_path) + " , " + self.user.first_name) + " , " + str(self.user.last_name)  + "\n")
 
             # print(html_message)

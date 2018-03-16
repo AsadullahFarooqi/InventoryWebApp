@@ -12,8 +12,10 @@
       <thead>
         <tr>
           <th>Product name</th>
-          <th>Container Type Use</th>
+          <th>Container Type</th>
           <th>Container Material</th>
+          <th>Aprox weight</th>
+          <th>Details</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -22,8 +24,12 @@
         {% for product in object_list %}
           <tr>
             <td>{{ product.name }}</td>
+
             <td>{{ product.container_type_name }}</td>
+
             <td>{{ product.material_container_made_of }}</td>
+            <td>{{ product.approximate_weight_container_holds }}</td>
+            <td>{{ product.product_details }}</td>
             <td><a href="{% url 'store:update_product' product.store.slug product.slug %}">
               <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
             <td><a class="delete_button" href="{% url 'store:delete_product' product.store.slug product.slug %}" onclick="return confirm_alert(this);">

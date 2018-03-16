@@ -8,6 +8,11 @@ from django.db.models.signals import pre_save
 from store.utils import unique_slug_generator
 from account.models import Profile
 
+class OnlyActiveItems(models.Manager):
+    def all(self, *args, **kwargs):
+        # Post.objects.all() = super(PostManager, self).all()
+        return super(OnlyActiveItems, self).filter(active=True)
+
 # Create your models here.
 class Company(models.Model):
 	owner = models.ForeignKey(Profile, related_name="companies")
@@ -17,6 +22,10 @@ class Company(models.Model):
 	location = models.CharField(max_length = 50, help_text="state/city, country")
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True)
+
+	active = models.BooleanField(default=True)
+	objects = OnlyActiveItems()
+
 
 	class Meta(object):
 		verbose_name_plural = "Companies"

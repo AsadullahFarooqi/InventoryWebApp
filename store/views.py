@@ -21,8 +21,8 @@ ProductsForm,
 # ContainersTypesForm,
 ImportedForm,
 ExportedForm,
-ExportPaymentsForm,
-ImportPaymentsForm,
+CustomerPaymentForm,
+SupplierPaymentForm,
 
 )
 
@@ -162,7 +162,7 @@ class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 class CustomerPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
-	form_class = ExportPaymentsForm
+	form_class = CustomerPaymentForm
 	success_message = "Successfully added!"
 
 	def get_context_data(self, *args, **kwargs):
@@ -183,7 +183,7 @@ class CustomerPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
 
 class SupplierPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
-	form_class = ImportPaymentsForm
+	form_class = SupplierPaymentForm
 	success_message = "Successfully added!"
 
 	def get_context_data(self, *args, **kwargs):
@@ -222,14 +222,14 @@ def dashboard(request, store_slug=None):
 	"total_exports": Store.objects.get(slug=store_slug).store_exports.all().count(),
 	"total_products": Store.objects.get(slug=store_slug).products.all().count(),
 	# "total_types_of_containers": Store.objects.get(slug=store_slug).types_of_containers.all().count(),
-	"total_import_payments": Store.objects.get(slug=store_slug).store_import_payments.all().count(),
-	"total_export_payments": Store.objects.get(slug=store_slug).store_export_payments.all().count(),
+	"total_import_payments": Store.objects.get(slug=store_slug).store_supplier_payments.all().count(),
+	"total_export_payments": Store.objects.get(slug=store_slug).store_customer_payments.all().count(),
 	}
 	return render(request, template_name, context)
 
 @login_required
 def each_day_report(request, store_slug=None):
-	
+
 	template_name = "store/customer_profile.html"
 	context = {
 	"customer": customer,
@@ -246,7 +246,7 @@ def customer_profile_view(request, store_slug=None, customer_slug=None):
 	products = {}
 	for i in set(customer.customer_exports.values_list("product_name", flat=True)):
 		products[i] = sum(customer.customer_exports.filter(product_name=i).values_list("number_of_containers", flat=True))
-	
+
 	template_name = "store/customer_profile.html"
 	context = {
 	"customer": customer,
@@ -259,14 +259,14 @@ def customer_profile_view(request, store_slug=None, customer_slug=None):
 def supplier_profile_view(request, store_slug=None, supplier_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
-	
+
 	supplier = get_object_or_404(Supplier, slug=supplier_slug)
 
 	products = {}
 
 	for i in set(supplier.supplier_imports.values_list("product_name", flat=True)):
 		products[i] = sum(supplier.supplier_imports.filter(product_name=i).values_list("number_of_containers", flat=True))
-	
+
 
 	template_name = "store/supplier_profile.html"
 	context = {
@@ -341,13 +341,13 @@ def customer_list_view(request, store_slug = None):
 	queryset_list = Store.objects.get(slug=store_slug).customers.all() #.order_by("-timestamp")
 
 	query = request.GET.get("q")
-	
+
 	if query:
 		queryset_list = queryset_list.filter(
 				Q(name__icontains=query)|
 				Q(last_name__icontains=query)|
-				Q(address__icontains=query) 
-				).distinct()		
+				Q(address__icontains=query)
+				).distinct()
 
 
 	template_name = "store/customers_list.html"
@@ -366,13 +366,13 @@ def supplier_list_view(request, store_slug = None):
 	queryset_list = Store.objects.get(slug=store_slug).suppliers.all() #.order_by("-timestamp")
 
 	query = request.GET.get("q")
-	
+
 	if query:
 		queryset_list = queryset_list.filter(
 				Q(name__icontains=query)|
 				Q(last_name__icontains=query)|
-				Q(address__icontains=query) 
-				).distinct()		
+				Q(address__icontains=query)
+				).distinct()
 
 
 	template_name = "store/suppliers_list.html"
@@ -404,7 +404,7 @@ def supplier_list_view(request, store_slug = None):
 # 	def get_queryset(self):
 # 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
 # 			raise Http404
-		
+
 # 		slug = self.kwargs["store_slug"]
 # 		return Store.objects.get(slug=slug).suppliers.all()
 
@@ -447,7 +447,7 @@ class ExportedListView(LoginRequiredMixin, ListView):
 		slug = self.kwargs["store_slug"]
 		return Store.objects.get(slug=slug).store_exports.all()
 
-class ExportPaymentsListView(LoginRequiredMixin, ListView):
+class CustomerPaymentsListView(LoginRequiredMixin, ListView):
 	template_name = "store/export_payments_list.html"
 
 	def get_queryset(self):
@@ -455,17 +455,17 @@ class ExportPaymentsListView(LoginRequiredMixin, ListView):
 			raise Http404
 
 		slug = self.kwargs["store_slug"]
-		return Store.objects.get(slug=slug).store_export_payments.all()
+		return Store.objects.get(slug=slug).store_customer_payments.all()
 
 
-class ImportPaymentsListView(LoginRequiredMixin, ListView):
+class SupplierPaymentsListView(LoginRequiredMixin, ListView):
 	template_name = "store/import_payments_list.html"
 
 	def get_queryset(self):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
 			raise Http404
 		slug = self.kwargs["store_slug"]
-		return Store.objects.get(slug=slug).store_import_payments.all()
+		return Store.objects.get(slug=slug).store_supplier_payments.all()
 
 
 ######################################################################################################################
@@ -635,7 +635,7 @@ class ExportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 class CustomerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	template_name = "store/update_form.html"
 	success_message = "Update is Successfully done!."
-	form_class = ExportPaymentsForm
+	form_class = CustomerPaymentForm
 
 	def get_object(self, **kwargs):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
@@ -662,7 +662,7 @@ class CustomerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
 class SupplierPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	template_name = "store/update_form.html"
 	success_message = "Update is Successfully done!."
-	form_class = ImportPaymentsForm
+	form_class = SupplierPaymentForm
 
 	def get_object(self, **kwargs):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
@@ -694,7 +694,8 @@ def customer_delete_view(request, store_slug=None, customer_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Customer, slug=customer_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Customer is Successfully deleted!")
 
@@ -705,7 +706,8 @@ def supplier_delete_view(request, store_slug=None, supplier_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Supplier, slug=supplier_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Supplier is Successfully deleted!")
 
@@ -716,7 +718,8 @@ def products_delete_view(request, store_slug=None, product_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Products, slug=product_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Produtct is Successfully deleted!")
 
@@ -728,7 +731,7 @@ def products_delete_view(request, store_slug=None, product_slug=None):
 # 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 # 		raise Http404
 # 	obj = get_object_or_404(ContainersTypes, slug=container_type_slug)
-# 	obj.delete()
+# 	obj.active=False
 
 # 	messages.success(request, "Container Type is Successfully deleted!")
 
@@ -739,7 +742,8 @@ def import_delete_view(request, store_slug=None, import_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Imported, slug=import_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Import is Successfully deleted!")
 
@@ -750,7 +754,8 @@ def export_delete_view(request, store_slug=None, export_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Exported, slug=export_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Export is Successfully deleted!")
 
@@ -761,7 +766,8 @@ def customer_payment_delete_view(request, store_slug=None, customer_slug=None, e
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(PaymentsOfCustomers, slug=export_payment_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Export Payment is Successfully deleted!")
 
@@ -772,7 +778,8 @@ def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, i
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(PaymentsToSuppliers, slug=import_payment_slug)
-	obj.delete()
+	obj.active=False
+	obj.save()
 
 	messages.success(request, "Import payment is Successfully deleted!")
 
