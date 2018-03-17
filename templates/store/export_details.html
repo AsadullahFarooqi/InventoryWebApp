@@ -1,42 +1,46 @@
 {% extends "base.html" %}
-{% block title %}Export Details | {{ block.super }} {% endblock %}
+{% block title %}export Details | {{ block.super }} {% endblock %}
 
 
 {% block content %}
+
   <div class="container">
-    <h4 >Export Details</h4>
-  <div class="row">
-      <div class="col-sm-6 table-responsive">
+    <h4>export Details</h4>
+    <div class="row">
+      <div class="col-sm-6">
         <table class="table table-sm">
           <tr>
             <th>Store</th> <td>{{ export.store }}</td>
           </tr>
           <tr>
-            <th>Customer</th> <td><strong><a href="{% url 'store:customer_profile' export.store.slug export.customer.slug %}">{{ export.customer }}</a></strong></td>
+            <th>customer</th><td><strong><a href="{% url 'store:customer_profile' export.store.slug export.customer.slug %}">{{ export.customer }}</td>
           </tr>
           <tr>
             <th>Recipt Number from customer</th> <td>{{ export.customer_recipt_number}}</td>
           </tr>
-
-          <tr>
-            <th>Date</th> <td>{{ export.date }}</td>
-          </tr>
-
           <tr>
             <th>Truck Number</th> <td>{{ export.truck_plate_number }}</td>
           </tr>
-          <tr>
-            <th>Product</th> <td>{{ export.containers_of }}</td>
-          </tr>
 
+          <tr>
+            <th>Containers</th> <td>{{ export.number_of_containers }}</td>
+          </tr>
+          
+          <tr>
+            <th>Product</th> <td>{{ export.product.name }}</td>
+          </tr>
+          <tr>
+            <th>Container name</th> <td>{{ export.product.container_type_name }}</td>
+          </tr>
+          <tr>
+            <th>Container build with material</th> <td>{{ export.product.material_container_made_of }}</td>
+          </tr>
 
         </table>
       </div>
-      <div class="col-sm-6 table-responsive">
+      <div class="col-sm-6">
         <table class="table table-sm">
-          <tr>
-            <th>Type Of Container</th> <td>{{ export.type_of_containers }}</td>
-          </tr>
+          
           <tr>
             <th>Cost</th> <td>{{ export.cost }}</td>
           </tr>
@@ -44,27 +48,27 @@
             <th>Price of single item</th> <td>{{ export.price_of_singal_item }}</td>
           </tr>
           <tr>
-            <th># Of Containers</th> <td>{{ export.number_of_containers }}</td>
+            <th>Date</th> <td>{{ export.date }}</td>
           </tr>
-
           <tr>
             <th>Total Price</th> <td>{{ export.total_price }}</td>
           </tr>
 
           <tr>
             <td>
-              <a href="{% url 'store:update_export' export.store.slug export.customer.slug  export.slug %}">
-
-              <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a>
-              </td>
-            <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
-              <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i>
-            </a></td>
-
+              <a href="{% url 'store:update_export' export.store.slug export.customer.slug export.slug %}">
+                <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a>
+            </td>
+            <td>
+              <a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
+                <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a>
+            </td>
           </tr>
         </table>
       </div>
   </div>
   </div>
+
+
 
 {% endblock %}

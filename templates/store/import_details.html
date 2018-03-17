@@ -21,20 +21,25 @@
           <tr>
             <th>Truck Number</th> <td>{{ import.truck_plate_number }}</td>
           </tr>
-          <tr>
-            <th>Product</th> <td>{{ import.containers_of }}</td>
-          </tr>
+
           <tr>
             <th>Containers</th> <td>{{ import.number_of_containers }}</td>
+          </tr>
+          <tr>
+            <th>Product</th> <td>{{ import.product.name }}</td>
+          </tr>
+          <tr>
+            <th>Container name</th> <td>{{ import.product.container_type_name }}</td>
+          </tr>
+          <tr>
+            <th>Container build with material</th> <td>{{ import.product.material_container_made_of }}</td>
           </tr>
 
         </table>
       </div>
       <div class="col-sm-6">
         <table class="table table-sm">
-          <tr>
-            <th>Type Of Container</th> <td>{{ import.type_of_containers }}</td>
-          </tr>
+          
           <tr>
             <th>Cost</th> <td>{{ import.cost }}</td>
           </tr>

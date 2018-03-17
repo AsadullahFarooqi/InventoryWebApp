@@ -145,7 +145,7 @@ class Products(models.Model):
 	length 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	width 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	depth 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
-	material_container_made_of = models.CharField(blank=True, null=True, max_length=50)
+	material_container_made_of = models.CharField(max_length=50, blank=True, null=True)
 
 	timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
 	slug = models.SlugField(unique=True, blank=True, null=True)
@@ -164,15 +164,19 @@ class Products(models.Model):
 			return self.depth * self.width * self.length
 		return 0
 
-	@property
-	def containertype(self):
-		if self.material_container_made_of:
-
-			return str(self.container_type_name) + str(self.material_container_made_of)
+    # @property
+    # def containertype(self):
+    # 	if self.material_container_made_of:
+    #
+    # 		return str(self.container_type_name) + str(self.material_container_made_of)
 
 	@property
 	def product_info(self):
-		return str(self.name) + " " + str(self.container_type_name) + " " + str(material_container_made_of)
+	    if self.material_container_made_of:
+	        return str(self.name) + " " + str(self.container_type_name) + " " + str(material_container_made_of)
+	    else:
+	        return str(self.name) + " " + str(self.container_type_name) + " " + "none"
+
 
 	def __str__(self):
 		return self.name + " " + self.container_type_name
