@@ -15,6 +15,7 @@ from django.db.models import Q
 from company.models import Company
 
 from .forms import (
+EmployerForm,
 CustomerForm,
 SupplierForm,
 ProductsForm,
@@ -27,6 +28,7 @@ SupplierPaymentForm,
 )
 
 from .models import (
+CompanyEmployers,
 Customer,
 Supplier,
 Store,
@@ -36,6 +38,24 @@ Imported,
 Exported,
 PaymentsToSuppliers,
 PaymentsOfCustomers,)
+
+class EmployerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+	template_name = "store/create_form.html"
+	form_class = EmployerForm
+	success_message = "Successfully added!"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(EmployerCreateView, self).get_context_data(*args, **kwargs)
+		context["page_of"] = "Employer"
+		return context
+
+	def form_valid(self, form):
+		obj = form.save(commit=False)
+		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+		return super(EmployerCreateView, self).form_valid(form)
+
+	def get_success_url(self):
+		return reverse("store:employers_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 
 class CustomerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

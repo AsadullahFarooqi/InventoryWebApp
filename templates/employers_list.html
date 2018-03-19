@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}employers List | {{ block.super }} {% endblock %}
+
+
+{% block content %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Employers List</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#secondNav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="secondNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item ">
+          <a href="{% url 'store:add_employer' store_slug %}" class="nav-link "> <i class="fas fa-plus mr-3"></i>employer</a>
+        </li>
+
+        <li>
+          <a href="{% url 'store:add_supplier' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Supplier</a>
+        </li>
+       <li>
+         <a href="{% url 'store:add_product' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Product</a>
+       </li>     
+
+        <li>
+          <a href="{% url 'store:add_employer' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Employer</a>
+        </li>
+
+      </ul>
+      <form method='GET' action='' class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type='text' name='q' placeholder='Search Employer' value='{{ request.GET.q }}' aria-label="Search">
+        <button class="btn btn-default my-2 my-sm-0" type="submit">Search <i class="fa fa-search"></i></button>
+      </form>
+    </div>
+  </nav>
+
+
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>employer Name</th>
+          <th>Address</th>
+          <th>Contact</th>
+          <th><i class="fas fa-dollar-sign"></i></th>
+          <th><i class="fas fa-dollar-sign"></i>Takken</th>
+          <th>Edit</th>
+          <th>Delete</th>
+          <th title="click on the icon to add">Pays<i class="fas fa-dollar-sign"></i></th>
+        </tr>
+      </thead>
+
+        <tbody>
+          {% for employer in object_list %}
+          <tr>
+            <td style="font-size: 20px;">
+              <a href="{% url 'store:employer_profile' employer.store.slug employer.slug %}">{{ employer.name }}</a></td>
+            <td>{{ employer.address }}</td>
+            <td>{{ employer.contact }}</td>
+            <td>{{ employer.paid_payments }}</td>
+            <td>{{ employer.payments_should_be_paid }}</td>
+            <td><a href="{% url 'store:update_employer' employer.store.slug employer.slug %}">
+              <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+            <td><a class="delete_button" href="{% url 'store:delete_employer' employer.store.slug employer.slug %}" onclick="return confirm_alert(this);">
+              <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+            <td>
+              {% if employer.payments_done_def %}
+                <a href="{% url 'store:add_employer_payment' employer.store.slug employer.slug %}">
+                  <i class="fa fa-check fa-2x text-success" aria-hidden="true"></i></a>
+              {% else %}
+                <a href="{% url 'store:add_employer_payment' employer.store.slug employer.slug %}">
+                  <i class="fa fa-cross text-danger fa-2x" aria-hidden="true"></i></a>
+              {% endif %}
+            </td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+
+    </table>
+  </div>
+
+
+{% endblock content %}

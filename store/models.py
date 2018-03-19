@@ -10,7 +10,7 @@ class OnlyActiveItems(models.Manager):
     def all(self, *args, **kwargs):
         # Post.objects.all() = super(PostManager, self).all()
         return super(OnlyActiveItems, self).filter(active=True)
-
+		
 
 class Store(models.Model):
 	company = models.ForeignKey(Company,  limit_choices_to={'active': True}, related_name="stores")
@@ -34,16 +34,56 @@ class Store(models.Model):
 	def get_absolute_url(self):
 	    return reverse_lazy("store:dashboard", kwargs={"store_slug": self.slug})
 
+class CompanyEmployers(models.Model):
+	"""docstring for ClassName"""
+	name = models.CharField(max_length=25)
+	last_name = models.CharField(max_length=25, blank=True, null=True)
+	id_card_number = models.BigIntegerField(blank=True, null=True)
+	address = models.CharField(max_length=250, blank=True, null=True)
+	contact = models.BigIntegerField(blank=True, null=True)
+	email = models.EmailField(blank=True, null=True)
+
+	timestamp = models.DateTimeField(auto_now_add= True)
+	slug = models.SlugField(unique=True, blank=True, null=True)
+	active = models.BooleanField(default=True)
+	objects = OnlyActiveItems()
+
+	class Meta(object):
+		verbose_name_plural = "Employers"
+		ordering = ["name"]
+
+	@property
+	def money_have_taken(self):
+		return sum(self.employer_ledger.filter(in_or_out="In").values_list("amount", flat=True))
+
+	@property
+	def money_have_given(self):
+		return sum(self.employer_ledger.filter(in_or_out="Out").values_list("amount", flat=True))
+
+	@property
+	def payments_done_def(self):
+
+		if self.money_have_taken >= self.money_have_given:
+			return True
+		else:
+			return False
+
+
+	def __str__(self):
+		return str(self.name)
+		
+
 class Customer(models.Model):
 	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="customers")
 	name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25, blank=True, null=True)
 	id_card_number = models.BigIntegerField(blank=True, null=True)
 	address = models.CharField(max_length=250, blank=True, null=True)
+	email = models.EmailField(blank=True, null=True)
+
 	contact = models.BigIntegerField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
-
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
 
@@ -81,6 +121,8 @@ class Supplier(models.Model):
 	last_name = models.CharField(max_length=25, blank=True, null=True)
 	id_card_number = models.BigIntegerField(blank=True, null=True)
 	address = models.CharField(max_length=250, blank=True, null=True)
+	email = models.EmailField(blank=True, null=True)
+
 	contact = models.BigIntegerField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
@@ -309,6 +351,28 @@ class PaymentsToSuppliers(models.Model):
 	def __str__(self):
 		return str(self.supplier) + str(self.amount) + str(self.date)
 
+class EmployersLedger(models.Model):
+	"""docstring for o"""
+
+	MONEY_IN_OR_OUT = (
+    ('In', 'In'),
+    ('Out', 'Out'),
+    )
+	store 		= models.ForeignKey(Store, related_name="store_employers_ledger")
+	in_or_out 	= models.CharField(max_length=5, choices=MONEY_IN_OR_OUT, default="Out")
+	employer  	= models.ForeignKey(CompanyEmployers, related_name="employer_ledger")
+	reason  	= models.TextField()
+	amount 		= models.IntegerField(blank = False, null=False)
+	date 		= models.DateField()
+
+	timestamp 	= models.DateTimeField(auto_now_add= True)
+	slug 		= models.SlugField(unique=True, blank=True, null=True)
+	active 		= models.BooleanField(default=True)
+	objects 	= OnlyActiveItems()
+	
+	def __str__(self):
+		return self.employer + self.money
+
 
 def pre_save_slug(sender, instance, *args, **kwargs):
 
@@ -321,6 +385,8 @@ def pre_save_imp_exp(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = unique_slug_generator(instance)
 
+
+pre_save.connect(pre_save_slug, sender=CompanyEmployers)
 pre_save.connect(pre_save_slug, sender=Customer)
 pre_save.connect(pre_save_slug, sender=Supplier)
 pre_save.connect(pre_save_slug, sender=Store)
@@ -329,4 +395,5 @@ pre_save.connect(pre_save_slug, sender=Products)
 pre_save.connect(pre_save_imp_exp, sender=Imported)
 pre_save.connect(pre_save_imp_exp, sender=Exported)
 pre_save.connect(pre_save_slug, sender=PaymentsOfCustomers)
+pre_save.connect(pre_save_slug, sender=PaymentsToSuppliers)
 pre_save.connect(pre_save_slug, sender=PaymentsToSuppliers)

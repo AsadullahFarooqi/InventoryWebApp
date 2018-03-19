@@ -11,7 +11,7 @@ class CompanyForm(forms.ModelForm):
 
 	class Meta:
 		model = Company
-		exclude = ["owner", "timestamp", "slug"]
+		exclude = ["owner", "timestamp", "slug", "active"]
 
 class StoreForm(forms.ModelForm):
 

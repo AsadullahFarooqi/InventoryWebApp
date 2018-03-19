@@ -3,6 +3,7 @@ import datetime
 from django import forms
 
 from .models import (
+					CompanyEmployers,
 					Customer,
 					Supplier,
 					Store,
@@ -17,6 +18,11 @@ from .models import (
 
 this_year = datetime.date.today().year + 1
 
+class EmployerForm(forms.ModelForm):
+
+	class Meta:
+		model = CompanyEmployers
+		exclude = ["store", "timestamp", "slug", "active"]
 
 class CustomerForm(forms.ModelForm):
 
