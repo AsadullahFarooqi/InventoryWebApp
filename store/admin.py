@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
 					Store,
+					StoreEmployers,
 					Customer,
 					Supplier,
 					Products,
@@ -16,6 +17,7 @@ from .models import (
 
 # Register your models here.
 admin.site.register(Store)
+admin.site.register(StoreEmployers)
 admin.site.register(Customer)
 admin.site.register(Supplier)
 admin.site.register(Products)

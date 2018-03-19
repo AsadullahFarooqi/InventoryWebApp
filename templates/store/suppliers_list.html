@@ -15,17 +15,17 @@
           <a href="{% url 'store:add_customer' store_slug %}" class="nav-link "> <i class="fas fa-plus mr-3"></i>Customer</a>
         </li>
 
-       <li>
+        <li class="nav-item ">
+          <a href="{% url 'store:add_supplier' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Supplier</a>
+        </li>  
+
+        <li class="nav-item ">
+          <a href="{% url 'store:add_employer' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Employer</a>
+        </li>
+
+        <li class="nav-item ">
          <a href="{% url 'store:add_product' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Product</a>
        </li>
-
-        <li>
-          <a href="{% url 'store:add_customer' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Customer</a>
-        </li>
-
-        <li>
-          <a href="{% url 'store:add_supplier' store_slug %}" class="nav-link"> <i class="fas fa-plus mr-3"></i>Supplier</a>
-        </li>
 
       </ul>
       <form method='GET' action='' class="form-inline my-2 my-lg-0">

@@ -33,8 +33,8 @@
               <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus mr-3"></i>Add Supplier</a>
 
-              <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-plus mr-3"></i>Add Supplier</a>
+              <a href="{% url 'store:add_employer' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus mr-3"></i>Add Employer</a>
             </div>
             <br>
           </div>
@@ -56,13 +56,13 @@
      
                 <span class="badge badge-primary float-right" > {{ total_customers }}</span></a>
               <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Import 
+                <i class="fas fa-list-ul mr-2"></i>Imports
 
 
      
                 <span class="badge badge-primary float-right" > {{ total_imports }}</span></a>
               <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Export 
+                <i class="fas fa-list-ul mr-2"></i>Exports
 
 
      
@@ -77,27 +77,31 @@
                 View Lists
               </a>
               
+              <a href="{% url 'store:employers_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Employers 
+                <span class="badge badge-primary float-right" > {{ total_employers }}</span></a>
               
               <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Products 
                 <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
 
-              
 
               <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Suppliers Payments 
-
-
-     
                 <span class="badge badge-primary float-right" > {{ total_import_payments }}</span></a>
+
+
               <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Customers Payments 
-
-
-     
                 <span class="badge badge-primary float-right" > {{ total_export_payments }}</span></a>
-            </div>
 
+
+              <a href="{% url 'store:employers_payments_list' store_slug %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-list-ul mr-2"></i>Employers Payments
+                <span class="badge badge-primary float-right" > {{ total_employers_payments }}</span></a>
+
+
+            </div>
             <br>
           </div>
         </div>

@@ -3,7 +3,7 @@ import datetime
 from django import forms
 
 from .models import (
-					CompanyEmployers,
+					StoreEmployers,
 					Customer,
 					Supplier,
 					Store,
@@ -21,7 +21,7 @@ this_year = datetime.date.today().year + 1
 class EmployerForm(forms.ModelForm):
 
 	class Meta:
-		model = CompanyEmployers
+		model = StoreEmployers
 		exclude = ["store", "timestamp", "slug", "active"]
 
 class CustomerForm(forms.ModelForm):
@@ -77,3 +77,9 @@ class SupplierPaymentForm(forms.ModelForm):
 	class Meta(object):
 		model = PaymentsToSuppliers
 		exclude = ["store",  "supplier", "timestamp", "slug", "active"]
+
+class EmployersLedgerForm(forms.ModelForm):
+
+	class Meta:
+		model = Supplier
+		exclude = ["store",  "timestamp", "slug", "active"]

@@ -34,14 +34,17 @@ class Store(models.Model):
 	def get_absolute_url(self):
 	    return reverse_lazy("store:dashboard", kwargs={"store_slug": self.slug})
 
-class CompanyEmployers(models.Model):
+class StoreEmployers(models.Model):
 	"""docstring for ClassName"""
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="employers")
+
 	name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25, blank=True, null=True)
 	id_card_number = models.BigIntegerField(blank=True, null=True)
 	address = models.CharField(max_length=250, blank=True, null=True)
 	contact = models.BigIntegerField(blank=True, null=True)
 	email = models.EmailField(blank=True, null=True)
+	position = models.CharField(max_length=30, blank=True, null=True)
 
 	timestamp = models.DateTimeField(auto_now_add= True)
 	slug = models.SlugField(unique=True, blank=True, null=True)
@@ -358,9 +361,9 @@ class EmployersLedger(models.Model):
     ('In', 'In'),
     ('Out', 'Out'),
     )
-	store 		= models.ForeignKey(Store, related_name="store_employers_ledger")
+	store 		= models.ForeignKey(Store, related_name="store_employers_ledger", limit_choices_to={'active': True})
 	in_or_out 	= models.CharField(max_length=5, choices=MONEY_IN_OR_OUT, default="Out")
-	employer  	= models.ForeignKey(CompanyEmployers, related_name="employer_ledger")
+	employer  	= models.ForeignKey(StoreEmployers, related_name="employer_ledger", limit_choices_to={'active': True})
 	reason  	= models.TextField()
 	amount 		= models.IntegerField(blank = False, null=False)
 	date 		= models.DateField()
@@ -368,6 +371,7 @@ class EmployersLedger(models.Model):
 	timestamp 	= models.DateTimeField(auto_now_add= True)
 	slug 		= models.SlugField(unique=True, blank=True, null=True)
 	active 		= models.BooleanField(default=True)
+
 	objects 	= OnlyActiveItems()
 	
 	def __str__(self):
@@ -386,7 +390,7 @@ def pre_save_imp_exp(sender, instance, *args, **kwargs):
 		instance.slug = unique_slug_generator(instance)
 
 
-pre_save.connect(pre_save_slug, sender=CompanyEmployers)
+pre_save.connect(pre_save_slug, sender=StoreEmployers)
 pre_save.connect(pre_save_slug, sender=Customer)
 pre_save.connect(pre_save_slug, sender=Supplier)
 pre_save.connect(pre_save_slug, sender=Store)

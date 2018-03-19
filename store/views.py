@@ -24,11 +24,12 @@ ImportedForm,
 ExportedForm,
 CustomerPaymentForm,
 SupplierPaymentForm,
+EmployersLedgerForm
 
 )
 
 from .models import (
-CompanyEmployers,
+StoreEmployers,
 Customer,
 Supplier,
 Store,
@@ -37,7 +38,8 @@ Products,
 Imported,
 Exported,
 PaymentsToSuppliers,
-PaymentsOfCustomers,)
+PaymentsOfCustomers,
+EmployersLedger,)
 
 class EmployerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 	template_name = "store/create_form.html"
@@ -221,6 +223,26 @@ class SupplierPaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
 	def get_success_url(self):
 		return reverse("store:suppliers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
+
+class EmployersLedgerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+	template_name = "store/create_form.html"
+	form_class = EmployersLedgerForm
+	success_message = "Successfully added!"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(EmployersLedgerCreateView, self).get_context_data(*args, **kwargs)
+		context["page_of"] = "Employer Payments"
+		return context
+
+	def form_valid(self, form):
+		obj = form.save(commit=False)
+		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+
+		return super(EmployersLedgerCreateView, self).form_valid(form)
+
+	def get_success_url(self):
+		return reverse("store:employers_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+
 	######################################################################################################################
 	##########################################   Retrieve Views   ########################################################
 	######################################################################################################################
@@ -236,6 +258,7 @@ def dashboard(request, store_slug=None):
 	context = {
 	"store": store,
 	"store_slug": store_slug,
+	"total_employers": Store.objects.get(slug=store_slug).employers.all().count(),
 	"total_suppliers": Store.objects.get(slug=store_slug).suppliers.all().count(),
 	"total_customers": Store.objects.get(slug=store_slug).customers.all().count(),
 	"total_imports": Store.objects.get(slug=store_slug).store_imports.all().count(),
@@ -244,6 +267,7 @@ def dashboard(request, store_slug=None):
 	# "total_types_of_containers": Store.objects.get(slug=store_slug).types_of_containers.all().count(),
 	"total_import_payments": Store.objects.get(slug=store_slug).store_supplier_payments.all().count(),
 	"total_export_payments": Store.objects.get(slug=store_slug).store_customer_payments.all().count(),
+	"total_employers_payments": Store.objects.get(slug=store_slug).store_employers_ledger.all().count(),
 	}
 	return render(request, template_name, context)
 
@@ -253,6 +277,18 @@ def each_day_report(request, store_slug=None):
 	template_name = "store/customer_profile.html"
 	context = {
 	"customer": customer,
+	}
+	return render(request, template_name, context)
+
+@login_required
+def employer_profile_view(request, store_slug=None, emplyer_slug=None):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+		raise Http404
+	employer = get_object_or_404(StoreEmployers, slug=emplyer_slug)
+
+	template_name = "store/employer_profile.html"
+	context = {
+	"employer": employer,
 	}
 	return render(request, template_name, context)
 
@@ -352,6 +388,33 @@ def export_details_view(request, store_slug=None, export_slug=None):
 
 
 ######################### LIST VIEWS *********************************
+
+@login_required
+def employers_list_view(request, store_slug = None):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+			raise Http404
+
+	queryset_list = Store.objects.get(slug=store_slug).employers.all() #.order_by("-timestamp")
+
+	query = request.GET.get("q")
+
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(name__icontains=query)|
+				Q(last_name__icontains=query)|
+				Q(address__icontains=query)|
+				Q(email__icontains=query)
+				).distinct()
+
+
+	template_name = "store/employers_list.html"
+	context = {
+	"object_list": queryset_list,
+	"store_slug": store_slug,
+	}
+
+	return render(request, template_name, context)
+
 
 @login_required
 def customer_list_view(request, store_slug = None):
@@ -488,11 +551,44 @@ class SupplierPaymentsListView(LoginRequiredMixin, ListView):
 		return Store.objects.get(slug=slug).store_supplier_payments.all()
 
 
+class EmployerPaymentsListView(LoginRequiredMixin, ListView):
+	template_name = "store/employer_payments_list.html"
+
+	def get_queryset(self):
+		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+			raise Http404
+		slug = self.kwargs["store_slug"]
+		return Store.objects.get(slug=slug).store_employers_ledger.all()
+
+
 ######################################################################################################################
 ##########################################   Update Views   ##########################################################
 ######################################################################################################################
 
+class EmployerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+	template_name = "store/update_form.html"
+	form_class = EmployerForm
+	success_message = "Update is Successfully done!."
 
+	def get_object(self, **kwargs):
+		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+			raise Http404
+		self.object = StoreEmployers.objects.get(slug= self.kwargs["employer_slug"])
+		return self.object
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(EmployerUpdateView, self).get_context_data(*args, **kwargs)
+		context["page_of"] = "Employer"
+		return context
+
+	def form_valid(self, form):
+		obj = form.save(commit=False)
+		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
+
+		return super(EmployerUpdateView, self).form_valid(form)
+
+	def get_success_url(self):
+		return reverse("store:employer_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 
 class CustomerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -705,9 +801,47 @@ class SupplierPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
 	def get_success_url(self):
 		return reverse("store:import_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
+
+class EmployerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+	template_name = "store/update_form.html"
+	success_message = "Update is Successfully done!."
+	form_class = EmployersLedgerForm
+
+	def get_object(self, **kwargs):
+		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
+			raise Http404
+		self.object = EmployersLedger.objects.get(slug= self.kwargs["payment_slug"])
+		return self.object
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(EmployerPaymentUpdateView, self).get_context_data(*args, **kwargs)
+		context["page_of"] = "Payment of Employer"
+		return context
+
+	def form_valid(self, form):
+		obj = form.save(commit=False)
+		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
+
+		return super(EmployerPaymentUpdateView, self).form_valid(form)
+
+	def get_success_url(self):
+		return reverse("store:employers_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+
 ######################################################################################################################
 ##########################################   Delete Views   ##########################################################
 ######################################################################################################################
+
+@login_required
+def employer_delete_view(request, store_slug=None, employer_slug=None):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+		raise Http404
+	obj = get_object_or_404(StoreEmployers, slug=employer_slug)
+	obj.active=False
+	obj.save()
+
+	messages.success(request, "Employer is Successfully deleted!")
+
+	return HttpResponseRedirect(reverse("store:employers_list", kwargs={'store_slug': store_slug, }))
 
 @login_required
 def customer_delete_view(request, store_slug=None, customer_slug=None):
@@ -782,10 +916,10 @@ def export_delete_view(request, store_slug=None, export_slug=None):
 	return HttpResponseRedirect(reverse("store:exports_list", kwargs={"store_slug": store_slug}))
 
 @login_required
-def customer_payment_delete_view(request, store_slug=None, customer_slug=None, export_slug=None, export_payment_slug=None):
+def customer_payment_delete_view(request, store_slug=None, customer_slug=None, payment_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
-	obj = get_object_or_404(PaymentsOfCustomers, slug=export_payment_slug)
+	obj = get_object_or_404(PaymentsOfCustomers, slug=payment_slug)
 	obj.active=False
 	obj.save()
 
@@ -794,13 +928,26 @@ def customer_payment_delete_view(request, store_slug=None, customer_slug=None, e
 	return HttpResponseRedirect(reverse("store:export_payments_list", kwargs={"store_slug": store_slug,}))
 
 @login_required
-def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, import_slug=None, import_payment_slug=None):
+def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, payment_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
-	obj = get_object_or_404(PaymentsToSuppliers, slug=import_payment_slug)
+	obj = get_object_or_404(PaymentsToSuppliers, slug=payment_slug)
 	obj.active=False
 	obj.save()
 
 	messages.success(request, "Import payment is Successfully deleted!")
 
 	return HttpResponseRedirect(reverse("store:import_payments_list", kwargs={"store_slug": store_slug,}))
+
+
+@login_required
+def employer_payment_delete_view(request, store_slug=None, employer_slug=None, payment_slug=None):
+	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
+		raise Http404
+	obj = get_object_or_404(StoreEmployers, slug=payment_slug)
+	obj.active=False
+	obj.save()
+
+	messages.success(request, "Employer payment is Successfully deleted!")
+
+	return HttpResponseRedirect(reverse("store:employers_payments_list", kwargs={"store_slug": store_slug,}))
