@@ -237,6 +237,7 @@ class EmployersLedgerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
+		obj.employer = Employer.objects.get(slug=self.kwargs["employer_slug"])
 
 		return super(EmployersLedgerCreateView, self).form_valid(form)
 
@@ -821,6 +822,7 @@ class EmployerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
+		obj.employer = Employer.objects.get(slug=self.kwargs["employer_slug"])
 
 		return super(EmployerPaymentUpdateView, self).form_valid(form)
 

@@ -364,7 +364,7 @@ class EmployersLedger(models.Model):
 	store 		= models.ForeignKey(Store, related_name="store_employers_ledger", limit_choices_to={'active': True})
 	in_or_out 	= models.CharField(max_length=5, choices=MONEY_IN_OR_OUT, default="Out")
 	employer  	= models.ForeignKey(StoreEmployers, related_name="employer_ledger", limit_choices_to={'active': True})
-	reason  	= models.TextField()
+	reason  	= models.TextField(max_length=250)
 	amount 		= models.IntegerField(blank = False, null=False)
 	date 		= models.DateField()
 

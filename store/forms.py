@@ -13,6 +13,7 @@ from .models import (
 					Exported,
 					PaymentsOfCustomers,
 					PaymentsToSuppliers,
+					EmployersLedger,
 						)
 
 
@@ -81,5 +82,5 @@ class SupplierPaymentForm(forms.ModelForm):
 class EmployersLedgerForm(forms.ModelForm):
 
 	class Meta:
-		model = Supplier
-		exclude = ["store",  "timestamp", "slug", "active"]
+		model = EmployersLedger
+		exclude = ["store", "employer", "timestamp", "slug", "active"]
