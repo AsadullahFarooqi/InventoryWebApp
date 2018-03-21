@@ -31,7 +31,7 @@ with open(BASE_DIR + "/inventory/secret_key.txt") as f:
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["AsadLiam.pythonanywhere.com"]
+ALLOWED_HOSTS = ["asadLiam.pythonanywhere.com"]
 
 # ALLOWED_HOSTS = []
 # Application definition
