@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/add-customer-payments/$', views.CustomerPaymentCreateView.as_view(), name="add_customer_payment"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/add-supplier-payments/$', views.SupplierPaymentCreateView.as_view(), name="add_supplier_payment"),
 
-    url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/add-employer-payments/$', views.EmployersLedgerCreateView.as_view(), name="add_employer_payment"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<employer_slug>[\w-]+)/add-employer-payments/$', views.EmployersLedgerCreateView.as_view(), name="add_employer_payment"),
 
     ############## LIST VIEWS  ******************
 
@@ -70,6 +70,7 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-customer-payment/$', views.CustomerPaymentUpdateView.as_view(), name="update_customer_payment"),
     url(r'^(?P<store_slug>[\w-]+)/(?P<supplier_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-supplier-payment/$', views.SupplierPaymentUpdateView.as_view(), name="update_supplier_payment"),
 
+    url(r'^(?P<store_slug>[\w-]+)/(?P<employer_slug>[\w-]+)/(?P<payment_slug>[\w-]+)/update-employer-payment/$', views.EmployerPaymentUpdateView.as_view(), name="update_employer_payment"),
 
     ############## DELETE VIEWS  ******************
     url(r'^(?P<store_slug>[\w-]+)/(?P<employer_slug>[\w-]+)/delete-employer/$', views.employer_delete_view, name="delete_employer"),

@@ -80,7 +80,7 @@ class SupplierPaymentForm(forms.ModelForm):
 		exclude = ["store",  "supplier", "timestamp", "slug", "active"]
 
 class EmployersLedgerForm(forms.ModelForm):
-
+	date = forms.DateField(widget=forms.SelectDateWidget(years = tuple(range(this_year - 40, this_year))))
 	class Meta:
 		model = EmployersLedger
 		exclude = ["store", "employer", "timestamp", "slug", "active"]

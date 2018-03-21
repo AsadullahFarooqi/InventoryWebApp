@@ -237,12 +237,12 @@ class EmployersLedgerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
-		obj.employer = Employer.objects.get(slug=self.kwargs["employer_slug"])
+		obj.employer = StoreEmployers.objects.get(slug=self.kwargs["employer_slug"])
 
 		return super(EmployersLedgerCreateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:employers_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:employers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 	######################################################################################################################
 	##########################################   Retrieve Views   ########################################################
@@ -282,10 +282,10 @@ def each_day_report(request, store_slug=None):
 	return render(request, template_name, context)
 
 @login_required
-def employer_profile_view(request, store_slug=None, emplyer_slug=None):
+def employer_profile_view(request, store_slug=None, employer_slug=None):
 	if not (Store.objects.get(slug=store_slug).company in request.user.profile.companies.all()):
 		raise Http404
-	employer = get_object_or_404(StoreEmployers, slug=emplyer_slug)
+	employer = get_object_or_404(StoreEmployers, slug=employer_slug)
 
 	template_name = "store/employer_profile.html"
 	context = {
@@ -553,7 +553,7 @@ class SupplierPaymentsListView(LoginRequiredMixin, ListView):
 
 
 class EmployerPaymentsListView(LoginRequiredMixin, ListView):
-	template_name = "store/employer_payments_list.html"
+	template_name = "store/employers_payments_list.html"
 
 	def get_queryset(self):
 		if not (Store.objects.get(slug=self.kwargs["store_slug"]).company in self.request.user.profile.companies.all()):
@@ -589,7 +589,7 @@ class EmployerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		return super(EmployerUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:employer_list", kwargs={"store_slug": self.kwargs["store_slug"] })
+		return reverse("store:employers_list", kwargs={"store_slug": self.kwargs["store_slug"] })
 
 
 class CustomerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -822,12 +822,12 @@ class EmployerPaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
 	def form_valid(self, form):
 		obj = form.save(commit=False)
 		obj.Store = Store.objects.get(slug=self.kwargs["store_slug"])
-		obj.employer = Employer.objects.get(slug=self.kwargs["employer_slug"])
+		obj.employer = StoreEmployers.objects.get(slug=self.kwargs["employer_slug"])
 
 		return super(EmployerPaymentUpdateView, self).form_valid(form)
 
 	def get_success_url(self):
-		return reverse("store:employers_payments_list", kwargs={"store_slug": self.kwargs["store_slug"]})
+		return reverse("store:employers_list", kwargs={"store_slug": self.kwargs["store_slug"]})
 
 ######################################################################################################################
 ##########################################   Delete Views   ##########################################################

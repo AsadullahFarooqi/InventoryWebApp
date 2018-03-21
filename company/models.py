@@ -21,7 +21,7 @@ class Company(models.Model):
 	phone = models.BigIntegerField(blank=True, null=True)
 	location = models.CharField(max_length = 50, help_text="state/city, country")
 	timestamp = models.DateTimeField(auto_now_add= True)
-	slug = models.SlugField(unique=True, blank=True)
+	slug = models.SlugField(unique=True)
 
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()

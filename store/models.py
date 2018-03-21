@@ -16,7 +16,7 @@ class Store(models.Model):
 	company = models.ForeignKey(Company,  limit_choices_to={'active': True}, related_name="stores")
 	name = models.CharField(max_length=20)
 	address = models.CharField(max_length=250, blank=True, null=True)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 	capacity = models.PositiveIntegerField(blank=True, null=True, help_text="containers the store can hold")
 	timestamp = models.DateTimeField(auto_now_add=True)
 	store_is_active_from = models.DateField(auto_now=False, auto_now_add=False)
@@ -47,7 +47,7 @@ class StoreEmployers(models.Model):
 	position = models.CharField(max_length=30, blank=True, null=True)
 
 	timestamp = models.DateTimeField(auto_now_add= True)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
 
@@ -56,17 +56,24 @@ class StoreEmployers(models.Model):
 		ordering = ["name"]
 
 	@property
-	def money_have_taken(self):
-		return sum(self.employer_ledger.filter(in_or_out="In").values_list("amount", flat=True))
+	def list_of_in_payments(self):
+		return self.employer_payments.filter(in_or_out="In")
 
 	@property
-	def money_have_given(self):
-		return sum(self.employer_ledger.filter(in_or_out="Out").values_list("amount", flat=True))
+	def list_of_out_payments(self):
+		return self.employer_payments.filter(in_or_out="Out")
+	
+	@property
+	def paid_payments(self):
+		return sum(self.employer_payments.filter(in_or_out="In").values_list("amount", flat=True))
+
+	@property
+	def payments_should_be_paid(self):
+		return sum(self.employer_payments.filter(in_or_out="Out").values_list("amount", flat=True))
 
 	@property
 	def payments_done_def(self):
-
-		if self.money_have_taken >= self.money_have_given:
+		if self.paid_payments >= self.payments_should_be_paid:
 			return True
 		else:
 			return False
@@ -86,7 +93,7 @@ class Customer(models.Model):
 
 	contact = models.BigIntegerField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
 
@@ -128,7 +135,7 @@ class Supplier(models.Model):
 
 	contact = models.BigIntegerField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
@@ -164,7 +171,7 @@ class Supplier(models.Model):
 	# 	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="products")
 	# 	name n = models.CharField(max_length=30)
 	# 	details = models.TextField(blank=True, null=True)
-	# 	slug = models.SlugField(unique=True, blank=True, null=True)
+	# 	slug = models.SlugField(unique=True)
 	# 	timestamp = models.DateTimeField(auto_now_add=True)
 
 	# 	class Meta(object):
@@ -193,7 +200,7 @@ class Products(models.Model):
 	material_container_made_of = models.CharField(max_length=50, blank=True, null=True)
 
 	timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
@@ -245,7 +252,7 @@ class Imported(models.Model):
 	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_imports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 	date	= models.DateField(auto_now=False, auto_now_add=False)
 	timestamp = models.DateTimeField(auto_now = True, auto_now_add=False)
 	# payments_done = models.BooleanField(default=False)
@@ -285,7 +292,7 @@ class Exported(models.Model):
 	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_exports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 	date	= models.DateField(auto_now=False, auto_now_add=False)
 	timestamp = models.DateTimeField(auto_now = True, auto_now_add=False)
 	# payments_done = models.BooleanField(default=False)
@@ -320,7 +327,7 @@ class PaymentsOfCustomers(models.Model):
 	# info_about_payment = models.TextField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
 
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
@@ -342,7 +349,7 @@ class PaymentsToSuppliers(models.Model):
 	# info_about_payment = models.TextField(blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now_add= True)
 
-	slug = models.SlugField(unique=True, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 
 	active = models.BooleanField(default=True)
 	objects = OnlyActiveItems()
@@ -363,19 +370,20 @@ class EmployersLedger(models.Model):
     )
 	store 		= models.ForeignKey(Store, related_name="store_employers_ledger", limit_choices_to={'active': True})
 	in_or_out 	= models.CharField(max_length=5, choices=MONEY_IN_OR_OUT, default="Out")
-	employer  	= models.ForeignKey(StoreEmployers, related_name="employer_ledger", limit_choices_to={'active': True})
-	reason  	= models.TextField(max_length=250)
+	employer  	= models.ForeignKey(StoreEmployers, related_name="employer_payments", limit_choices_to={'active': True})
+	payment_method = models.CharField(max_length=50, blank=True, null=True)
+	reason  	= models.TextField(max_length=250, blank=True, null=True)
 	amount 		= models.IntegerField(blank = False, null=False)
 	date 		= models.DateField()
 
 	timestamp 	= models.DateTimeField(auto_now_add= True)
-	slug 		= models.SlugField(unique=True, blank=True, null=True)
+	slug 		= models.SlugField(unique=True)
 	active 		= models.BooleanField(default=True)
 
 	objects 	= OnlyActiveItems()
 	
 	def __str__(self):
-		return self.employer + self.money
+		return str(self.employer)
 
 
 def pre_save_slug(sender, instance, *args, **kwargs):
@@ -400,4 +408,4 @@ pre_save.connect(pre_save_imp_exp, sender=Imported)
 pre_save.connect(pre_save_imp_exp, sender=Exported)
 pre_save.connect(pre_save_slug, sender=PaymentsOfCustomers)
 pre_save.connect(pre_save_slug, sender=PaymentsToSuppliers)
-pre_save.connect(pre_save_slug, sender=PaymentsToSuppliers)
+pre_save.connect(pre_save_slug, sender=EmployersLedger)

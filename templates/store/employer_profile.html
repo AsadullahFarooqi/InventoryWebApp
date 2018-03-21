@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}employer Info | {{ block.super }} {% endblock %}
+
+
+{% block content %}
+
+  <h3 >employer Information</h3>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <td>{{ employer.name }}</td>
+          </tr>
+          <tr>
+            <th>Position</th>
+            <td>{{ employer.position }}</td>
+          </tr>
+          <tr>
+            <th>ID Card</th>
+            <td>{{ employer.id_card_number }}</td>
+          </tr>
+          <tr>
+            <th>Address</th>
+            <td>{{ employer.address }}</td>
+          </tr>
+          <tr>
+            <th>Contact</th>
+            <td>{{ employer.contact }}</td>
+          </tr>
+
+          <tr>
+            <th>Email</th>
+            <td>{{ employer.email }}</td>
+          </tr>
+
+
+
+        </table>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>Add Payment</th>
+            <td><a title="Add Payments!" href="{% url 'store:add_employer_payment' employer.store.slug employer.slug %}"><i class="far fa-credit-card text-success fa-2x"></i></a></td>
+          </tr>
+
+          <tr>
+            <th>Edit</th>
+            <td><a href="{% url 'store:update_employer' employer.store.slug employer.slug %}"><i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+          <tr>
+            <th>Delete</th>
+            <td><a class="delete_button" href="{% url 'store:delete_employer' employer.store.slug employer.slug %}" onclick="return confirm_alert(this);"><i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+          <tr>
+            <th>Payments Done/Not Done</th>
+            <td>
+            {% if employer.paid_payments >= employer.payments_should_be_paid %}
+              <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+            {% else %}
+              <i class="fa fa-cross fa-2x" aria-hidden="true"></i>
+            {% endif %}
+          </td>
+          </tr>
+          <tr>
+            <th>Paid Payments</th>
+            <td>{{ employer.paid_payments }}</td>
+          </tr>
+
+          <tr>
+            <th>Total Payment should be paid</th>
+            <td>{{ employer.payments_should_be_paid }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="export-tab" data-toggle="tab" href="#export" role="tab" aria-controls="export" aria-selected="true">Payments Out from the Store
+      <span class="badge badge-primary ml-2 float-right">{{ employer.list_of_out_payments.count }}</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false">Payments In to the Store
+      <span class="badge badge-primary ml-2 float-right">{{ employer.list_of_in_payments.count }}</span></a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="export" role="tabpanel" aria-labelledby="export-tab">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>In/Out</th>
+            <th>Reason</th>
+            <th>Method</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in employer.list_of_out_payments %}
+          <tr>
+            <td>{{ payment.in_or_out }}</td>
+            <td>{{ payment.reason }}</td>
+            <td>{{ payment.payment_method }}</td>
+            <td>{{ payment.amount }}</td>
+            <td>{{ payment.date }}</td>
+            <td><a href="{% url 'store:update_employer_payment' employer.store.slug employer.slug payment.slug %}">
+              <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+            <td><a class="delete_button" href="{% url 'store:delete_employer_payment' employer.store.slug employer.slug payment.slug %}" onclick="return confirm_alert(this);">
+              <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>In/Out</th>
+            <th>Reason</th>
+            <th>Method</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in employer.list_of_in_payments %}
+          <tr>
+            <td>{{ payment.in_or_out }}</td>
+            <td>{{ payment.reason }}</td>
+            <td>{{ payment.payment_method }}</td>
+            <td>{{ payment.amount }}</td>
+            <td>{{ payment.date }}</td>
+            <td><a href="{% url 'store:update_employer_payment' employer.store.slug employer.slug payment.slug %}">
+              <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+            <td><a class="delete_button" href="{% url 'store:delete_employer_payment' employer.store.slug employer.slug payment.slug %}" onclick="return confirm_alert(this);">
+              <i class="fa fa-trash text-danger fa-2x" aria-hidden="true"></i></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+{% endblock %}
