@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | {{ block.super }} {% endblock %}
+
+
+{% block content %}
+
+  <h4 class="h4">
+    <strong>{{ date }}</strong>
+    Details
+
+  </h4>
+
+  <div class="row">
+    <div class="col-sm-6">
+
+      <h5 class="h6">
+        Exports
+      </h5>
+
+      <table class="table table-sm">
+        {% if export_products.items %}
+          {% for product_name, total_containers in export_products.items %}
+            <tr>
+              <th>{{ product_name }}</th> <td>{{ total_containers }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td>0</td>
+          </tr>
+        {% endif %}
+
+      </table>
+
+    </div>
+    <div class="col-sm-6">
+      <h5 class="h6">
+        Imports
+      </h5>
+
+
+      <table class="table table-sm">
+        {% if import_products.items %}
+          {% for product_name, total_containers in import_products.items %}
+            <tr>
+              <th>{{ product_name }}</th> <td>{{ total_containers }}</td>
+            </tr>
+          {% endfor %}
+
+        {% else %}
+          <tr>
+            <td>0</td>
+          </tr>
+        {% endif %}
+      </table>      
+      
+    </div>
+  </div>  <!-- row -->
+  
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="export-tab" data-toggle="tab" href="#export" role="tab" aria-controls="export" aria-selected="true">Exports
+      <span class="badge badge-primary ml-2 float-right">{{ exports.count }}</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false">Imports
+      <span class="badge badge-primary ml-2 float-right">{{ imports.count }}</span></a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="export" role="tabpanel" aria-labelledby="export-tab">
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Infos</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Recipt #No</th>
+              <th>Date</th>
+              <th>Containers</th>
+              <th>Cost</th>
+              <th title="Price of single item" >Price <i class="fas fa-dollar-sign"></i></th>
+              <th>Total <i class="fas fa-dollar-sign"></i></th>
+              <th>Edit</th>
+              <th>Delete</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for export in exports %}
+              <tr>
+                <td><a href="{% url 'store:export_details' export.store.slug export.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
+                <td><a href="{% url 'store:customer_profile' export.store.slug export.customer.slug %}">{{ export.customer }}</a></td>
+                <td>{{ export.product }}</td>
+                <td>{{ export.customer_recipt_number }}</td>
+                <td>{{ export.date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ export.number_of_containers }}</td>
+                <td>{{ export.cost }}</td>
+                <td>{{ export.price_of_singal_item }}</td>
+                <td>{{ export.total_price }}</td>
+
+                <td>
+                  <a href="{% url 'store:update_export' export.store.slug export.customer.slug export.slug %}">
+                <i class="fa fa-edit fa-2x" aria-hidden="true"></i>
+                </a>
+                </td>
+                <td><a class="delete_button" href="{% url 'store:delete_export' export.store.slug export.slug %}" onclick="return confirm_alert(this);">
+                <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
+                </a></td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Infos</th>
+              <th>Supplier</th>
+              <th>Product</th>
+              <th>Recipt #no</th>
+              <th>Date</th>
+              <th>Containers</th>
+              <th>Cost</th>
+              <th title="Price of single item" >Price</th>
+              <th>Total <i class="fas fa-dollar-sign"></th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for import in imports %}
+              <tr>
+                <td><a href="{% url 'store:import_details' import.store.slug import.slug %}" class="btn btn-sm btn-info" role="button">Full Info</a></td>
+                <td><a href="{% url 'store:supplier_profile' import.store.slug import.supplier.slug %}">{{ import.supplier }}</a></td>
+                <td>{{ import.product }}</td>
+                <td>{{ import.supplier_recipt_number }}</td>
+                <td>{{ import.date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ import.number_of_containers }}</td>
+                <td>{{ import.cost }}</td>
+                <td>{{ import.price_of_singal_item }}</td>
+                <td>{{ import.total_price }}</td>
+                <td><a href="{% url 'store:update_import' import.store.slug import.supplier.slug import.slug %}">
+                  <i class="fa fa-edit fa-2x" aria-hidden="true"></i></a></td>
+                <td><a class="delete_button" href="{% url 'store:delete_import' import.store.slug import.slug %}" onclick="return confirm_alert(this);">
+                  <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i></a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
