@@ -255,10 +255,12 @@ def dashboard(request, store_slug=None):
 	# store = Company.objects.get(slug=company_slug).stores.get(slug=store_slug)
 	if not (store.company in request.user.profile.companies.all()):
 		raise Http404
+
 	template_name = "store/dashboard.html"
 	context = {
 	"store": store,
 	"store_slug": store_slug,
+	"dates_list": store.store_imports.values_list('date', flat=True).distinct(),
 	"total_employers": Store.objects.get(slug=store_slug).employers.all().count(),
 	"total_suppliers": Store.objects.get(slug=store_slug).suppliers.all().count(),
 	"total_customers": Store.objects.get(slug=store_slug).customers.all().count(),
@@ -273,11 +275,36 @@ def dashboard(request, store_slug=None):
 	return render(request, template_name, context)
 
 @login_required
-def each_day_report(request, store_slug=None):
+def day_report_by_date(request, store_slug=None, date=None):
 
-	template_name = "store/customer_profile.html"
+	store = get_object_or_404(Store, slug=store_slug)
+	# store = Company.objects.get(slug=company_slug).stores.get(slug=store_slug)
+	if not (store.company in request.user.profile.companies.all()):
+		raise Http404
+
+	imports = store.store_imports.filter(date=date)
+	exports = store.store_exports.filter(date=date)
+
+	import_products = {}
+	export_products = {}
+
+	for i in set(imports.values_list("product_name", flat=True)):
+		import_products[i] = sum(imports.filter(product_name=i).values_list("number_of_containers", flat=True))
+
+	for i in set(exports.values_list("product_name", flat=True)):
+		export_products[i] = sum(exports.filter(product_name=i).values_list("number_of_containers", flat=True))
+
+	
+
+
+	template_name = "store/day_report_by_date.html"
 	context = {
-	"customer": customer,
+	"date": date,
+	"store_slug": store_slug,
+	"imports": imports,
+	"exports": exports,
+	"import_products": import_products,
+	"export_products": export_products,
 	}
 	return render(request, template_name, context)
 

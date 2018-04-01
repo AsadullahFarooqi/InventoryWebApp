@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^(?P<store_slug>[\w-]+)/(?P<customer_slug>[\w-]+)/(?P<cus_product>[\w]+[\s\w]+)/$', views.customer_product_imports_list, name="customer_product"),
 
     url(r'^(?P<store_slug>[\w-]+)/products-list/$', views.ProductsListView.as_view(), name="products_list"),
-    # url(r'^(?P<store_slug>[\w-]+)/containers-types-list/$', views.ContainerTypesListView.as_view(), name="containers_types_list"),
+    url(r'^(?P<store_slug>[\w-]+)/(?P<date>(\d+.\d+.\d+))/day-reports/$', views.day_report_by_date, name="day_report_by_date"),
 
     url(r'^(?P<store_slug>[\w-]+)/imports-list/$', views.ImportedListView.as_view(), name="imports_list"),
     url(r'^(?P<store_slug>[\w-]+)/exports-list/$', views.ExportedListView.as_view(), name="exports_list"),
