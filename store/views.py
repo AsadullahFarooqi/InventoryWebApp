@@ -1,18 +1,14 @@
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.urls import reverse_lazy
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
-
-from company.models import Company
 
 from .forms import (
 EmployerForm,
@@ -260,7 +256,7 @@ def dashboard(request, store_slug=None):
 	context = {
 	"store": store,
 	"store_slug": store_slug,
-	"dates_list": store.store_imports.values_list('date', flat=True).distinct(),
+	"dates_list": set(list(store.store_imports.values_list('date', flat=True).distinct()) + list(store.store_exports.values_list('date', flat=True).distinct())),#store.store_imports.values_list('date', flat=True).distinct(),
 	"total_employers": Store.objects.get(slug=store_slug).employers.all().count(),
 	"total_suppliers": Store.objects.get(slug=store_slug).suppliers.all().count(),
 	"total_customers": Store.objects.get(slug=store_slug).customers.all().count(),
@@ -294,7 +290,7 @@ def day_report_by_date(request, store_slug=None, date=None):
 	for i in set(exports.values_list("product_name", flat=True)):
 		export_products[i] = sum(exports.filter(product_name=i).values_list("number_of_containers", flat=True))
 
-	
+
 
 
 	template_name = "store/day_report_by_date.html"

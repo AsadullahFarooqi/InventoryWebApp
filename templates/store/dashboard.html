@@ -3,7 +3,7 @@
 
 
 {% block content %}
-  
+
   <div class="container">
     <header>
       <h1 ><strong>{{ store }}</strong> <small>Dashboard</small></h1>
@@ -15,7 +15,7 @@
       <li class="nav-item">
         <a class="nav-link" id="dailyDetails-tab" data-toggle="tab" href="#dailyDetails" role="tab" aria-controls="dailyDetails" aria-selected="false">Daily Reports</a>
       </li>
-      
+
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -27,7 +27,7 @@
               </a>
               <a href="{% url 'store:add_product' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus mr-3"></i>Add Product</a>
-              
+
               <a href="{% url 'store:add_customer' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus mr-3"></i>Add Customer </a>
               <a href="{% url 'store:add_supplier' store_slug %}" class="list-group-item list-group-item-action">
@@ -44,28 +44,28 @@
                 Imports & Exports
               </a>
               <a href="{% url 'store:suppliers_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Suppliers 
+                <i class="fas fa-list-ul mr-2"></i>Suppliers
 
 
-     
+
                 <span class="badge badge-primary float-right" > {{ total_suppliers }}</span> </a>
               <a href="{% url 'store:customers_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Customers 
+                <i class="fas fa-list-ul mr-2"></i>Customers
 
 
-     
+
                 <span class="badge badge-primary float-right" > {{ total_customers }}</span></a>
               <a href="{% url 'store:imports_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Imports
 
 
-     
+
                 <span class="badge badge-primary float-right" > {{ total_imports }}</span></a>
               <a href="{% url 'store:exports_list' store_slug %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-list-ul mr-2"></i>Exports
 
 
-     
+
                 <span class="badge badge-primary float-right" > {{ total_exports }}</span></a>
             </div>
 
@@ -76,23 +76,23 @@
               <a href="" class="list-group-item list-group-item-action active">
                 View Lists
               </a>
-              
+
               <a href="{% url 'store:employers_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Employers 
+                <i class="fas fa-list-ul mr-2"></i>Employers
                 <span class="badge badge-primary float-right" > {{ total_employers }}</span></a>
-              
+
               <a href="{% url 'store:products_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Products 
+                <i class="fas fa-list-ul mr-2"></i>Products
                 <span class="badge badge-primary float-right" > {{ total_products }}</span></a>
 
 
               <a href="{% url 'store:import_payments_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Suppliers Payments 
+                <i class="fas fa-list-ul mr-2"></i>Suppliers Payments
                 <span class="badge badge-primary float-right" > {{ total_import_payments }}</span></a>
 
 
               <a href="{% url 'store:export_payments_list' store_slug %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-list-ul mr-2"></i>Customers Payments 
+                <i class="fas fa-list-ul mr-2"></i>Customers Payments
                 <span class="badge badge-primary float-right" > {{ total_export_payments }}</span></a>
 
 
@@ -119,22 +119,22 @@
                 <th>Total Money</th> -->
               </tr>
             </thead>
-            
+
               <tbody>
                 {% for item in dates_list %}
                 <tr>
                   <td><a href="{% url 'store:day_report_by_date' store_slug item %}">{{ item|date:"D d M Y" }}</a></td>
-                  
+
                 </tr>
                 {% endfor %}
               </tbody>
-            
+
           </table>
         </div>
       </div>
     </div>
-    
-    
+
+
   </div>
 
 {% endblock %}
