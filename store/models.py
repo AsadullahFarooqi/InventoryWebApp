@@ -10,7 +10,7 @@ class OnlyActiveItems(models.Manager):
     def all(self, *args, **kwargs):
         # Post.objects.all() = super(PostManager, self).all()
         return super(OnlyActiveItems, self).filter(active=True)
-		
+
 
 class Store(models.Model):
 	company = models.ForeignKey(Company,  limit_choices_to={'active': True}, related_name="stores")
@@ -62,7 +62,7 @@ class StoreEmployers(models.Model):
 	@property
 	def list_of_out_payments(self):
 		return self.employer_payments.filter(in_or_out="Out")
-	
+
 	@property
 	def paid_payments(self):
 		return sum(self.employer_payments.filter(in_or_out="In").values_list("amount", flat=True))
@@ -81,7 +81,7 @@ class StoreEmployers(models.Model):
 
 	def __str__(self):
 		return str(self.name)
-		
+
 
 class Customer(models.Model):
 	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="customers")
@@ -247,7 +247,7 @@ class Imported(models.Model):
 	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, related_name="product_imports")
 
 	number_of_containers =	models.IntegerField(blank=False, null=False)
-
+	place = models.CharField(max_length=50, blank=True, null=True)
 	product_name = models.CharField(blank=True, null=True, max_length=55)
 	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_imports")
 	cost = models.IntegerField(blank=True, null=True)
@@ -286,7 +286,7 @@ class Exported(models.Model):
 	truck_plate_number = models.CharField(blank=True, null=True, max_length=10)
 	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, related_name="product_exports")
 	number_of_containers =	models.IntegerField(blank=False, null=False)
-
+	place = models.CharField(max_length=50, blank=True, null=True)
 	product_name = models.CharField(blank=True, null=True, max_length=55)
 
 	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_exports")
@@ -381,7 +381,7 @@ class EmployersLedger(models.Model):
 	active 		= models.BooleanField(default=True)
 
 	objects 	= OnlyActiveItems()
-	
+
 	def __str__(self):
 		return str(self.employer)
 

@@ -27,11 +27,12 @@
         <li class="nav-item">
           <a class="nav-link disabled" href="#">Disabled</a>
         </li> -->
-      
-        
+
+
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <a class="form-control btn btn-outline-light my-2 my-sm-0" href="{% url 'logout' %}">
+        <a class="form-control btn btn-outline-light my-2 my-sm-0 mr-2" href="{% url 'password_change' %}">Change Password<span class="sr-only"></span></a>
+        <a class="form-control btn btn-outline-light my-2 my-sm-0" href="{% url 'logout' %}">
         Logout <span class="sr-only">(current)</span>
       </a>
     </form>
