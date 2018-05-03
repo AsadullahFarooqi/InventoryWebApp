@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
+from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 
 
@@ -86,13 +86,13 @@ def companies_list_view(request, owner_slug=None):
 	queryset_list = request.user.profile.companies.all() #.order_by("-timestamp")
 
 	query = request.GET.get("q")
-	
+
 	if query:
 		queryset_list = queryset_list.filter(
 				Q(name__icontains=query)|
 				Q(email__icontains=query)|
-				Q(location__icontains=query) 
-				).distinct()		
+				Q(location__icontains=query)
+				).distinct()
 
 
 	template_name = "company/companies_list.html"
@@ -107,7 +107,7 @@ def companies_list_view(request, owner_slug=None):
 # 	template_name = "company/companies_list.html"
 
 # 	def get_queryset(self):
-		
+
 # 		profile = self.request.user.profile.companies
 # 		return Company.objects.get(slug=slug).stores.all()
 
@@ -131,13 +131,13 @@ def stores_list_view(request, owner_slug=None, company_slug=None):
 	queryset_list = Company.objects.get(slug=company_slug).stores.all() #.order_by("-timestamp")
 
 	query = request.GET.get("q")
-	
+
 	if query:
 		queryset_list = queryset_list.filter(
 				Q(name__icontains=query)|
 				Q(address__icontains=query)|
-				Q(location__icontains=query) 
-				).distinct()		
+				Q(location__icontains=query)
+				).distinct()
 
 
 	template_name = "store/stores_list.html"
@@ -215,8 +215,10 @@ def company_delete_view(request, owner_slug=None, company_slug=None):
 	if not (Company.objects.get(slug=company_slug) in request.user.profile.companies.all()):
 		raise Http404
 	obj = get_object_or_404(Company, slug=company_slug)
-	
-	obj.delete()
+
+	obj.active = False
+	obj.stores.all().update(active=False)
+	obj.save()
 	messages.success(request, "Successfully Deleted")
 	return HttpResponseRedirect(reverse_lazy("company:companies_list", kwargs={"owner_slug": owner_slug}))
 
@@ -227,7 +229,18 @@ def store_delete_view(request, company_slug=None, store_slug=None):
 
 	obj = get_object_or_404(Store, slug=store_slug)
 	company_slug = obj.company.slug
-	obj.delete()
+
+	obj.active = False
+	obj.employers.all().update(active=False)
+	obj.customers.all().update(active=False)
+	obj.suppliers.all().update(active=False)
+	obj.products.all().update(active=False)
+	obj.store_imports.all().update(active=False)
+	obj.store_exports.all().update(active=False)
+	obj.store_customer_payments.all().update(active=False)
+	obj.store_supplier_payments.all().update(active=False)
+	obj.store_employers_ledger.all().update(active=False)
+	obj.save()
 
 	messages.success(request, "Successfully Deleted")
 

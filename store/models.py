@@ -13,7 +13,7 @@ class OnlyActiveItems(models.Manager):
 
 
 class Store(models.Model):
-	company = models.ForeignKey(Company,  limit_choices_to={'active': True}, related_name="stores")
+	company = models.ForeignKey(Company,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="stores")
 	name = models.CharField(max_length=20)
 	address = models.CharField(max_length=250, blank=True, null=True)
 	slug = models.SlugField(unique=True)
@@ -36,7 +36,7 @@ class Store(models.Model):
 
 class StoreEmployers(models.Model):
 	"""docstring for ClassName"""
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="employers")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="employers")
 
 	name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25, blank=True, null=True)
@@ -84,7 +84,7 @@ class StoreEmployers(models.Model):
 
 
 class Customer(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="customers")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="customers")
 	name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25, blank=True, null=True)
 	id_card_number = models.BigIntegerField(blank=True, null=True)
@@ -126,7 +126,7 @@ class Customer(models.Model):
 
 
 class Supplier(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="suppliers")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="suppliers")
 	name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25, blank=True, null=True)
 	id_card_number = models.BigIntegerField(blank=True, null=True)
@@ -168,7 +168,7 @@ class Supplier(models.Model):
 		return str(self.name)
 
 	# class Products(models.Model):
-	# 	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="products")
+	# 	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="products")
 	# 	name n = models.CharField(max_length=30)
 	# 	details = models.TextField(blank=True, null=True)
 	# 	slug = models.SlugField(unique=True)
@@ -186,13 +186,13 @@ class Supplier(models.Model):
 
 class Products(models.Model):
 
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="products")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="products")
 
 	name = models.CharField(max_length=50)
 	product_details = models.TextField(blank=True, null=True)
 
 	container_type_name = models.CharField(max_length=55)
-	# container_use_for = models.ForeignKey(Products,  limit_choices_to={'active': True}, related_name="contianer_types" , blank=True, null=True,)
+	# container_use_for = models.ForeignKey(Products,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="contianer_types" , blank=True, null=True,)
 	approximate_weight_container_holds = models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in kg!")
 	length 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
 	width 		= models.PositiveIntegerField(blank=True, null=True, help_text="Make sure the value is in inches!")
@@ -239,17 +239,17 @@ class Products(models.Model):
 
 
 class Imported(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="store_imports")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="store_imports")
 	supplier_recipt_number = models.BigIntegerField(blank=False, null=False)
-	supplier = models.ForeignKey(Supplier,  limit_choices_to={'active': True}, related_name="supplier_imports")
+	supplier = models.ForeignKey(Supplier,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="supplier_imports")
 	truck_plate_number = models.CharField(blank=True, null=True, max_length=10)
 
-	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, related_name="product_imports")
+	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="product_imports")
 
 	number_of_containers =	models.IntegerField(blank=False, null=False)
 	place = models.CharField(max_length=50, blank=True, null=True)
 	product_name = models.CharField(blank=True, null=True, max_length=55)
-	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_imports")
+	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="contaner_type_imports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
 	slug = models.SlugField(unique=True)
@@ -280,16 +280,16 @@ class Imported(models.Model):
 
 
 class Exported(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="store_exports")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="store_exports")
 	customer_recipt_number = models.BigIntegerField(blank=True, null=True)
-	customer = models.ForeignKey(Customer,  limit_choices_to={'active': True}, related_name="customer_exports")
+	customer = models.ForeignKey(Customer,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="customer_exports")
 	truck_plate_number = models.CharField(blank=True, null=True, max_length=10)
-	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, related_name="product_exports")
+	product = models.ForeignKey(Products,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="product_exports")
 	number_of_containers =	models.IntegerField(blank=False, null=False)
 	place = models.CharField(max_length=50, blank=True, null=True)
 	product_name = models.CharField(blank=True, null=True, max_length=55)
 
-	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, related_name="contaner_type_exports")
+	# type_of_containers = models.ForeignKey(ContainersTypes,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="contaner_type_exports")
 	cost = models.IntegerField(blank=True, null=True)
 	price_of_singal_item = models.IntegerField(blank=False, null=False)
 	slug = models.SlugField(unique=True)
@@ -319,8 +319,8 @@ class Exported(models.Model):
 
 
 class PaymentsOfCustomers(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="store_customer_payments")
-	customer = models.ForeignKey(Customer,  limit_choices_to={'active': True}, related_name="customer_payments")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="store_customer_payments")
+	customer = models.ForeignKey(Customer,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="customer_payments")
 	payment_method = models.CharField(max_length=50)
 	amount = models.IntegerField(blank=False,null=False)
 	date = models.DateField(auto_now=False, auto_now_add=False)
@@ -341,8 +341,8 @@ class PaymentsOfCustomers(models.Model):
 
 
 class PaymentsToSuppliers(models.Model):
-	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, related_name="store_supplier_payments")
-	supplier = models.ForeignKey(Supplier,  limit_choices_to={'active': True}, related_name="supplier_payments")
+	store = models.ForeignKey(Store,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="store_supplier_payments")
+	supplier = models.ForeignKey(Supplier,  limit_choices_to={'active': True}, on_delete=models.CASCADE, related_name="supplier_payments")
 	payment_method = models.CharField(max_length=50)
 	amount = models.IntegerField(blank = False, null=False)
 	date = models.DateField(auto_now=False, auto_now_add=False)
@@ -368,9 +368,9 @@ class EmployersLedger(models.Model):
     ('In', 'In'),
     ('Out', 'Out'),
     )
-	store 		= models.ForeignKey(Store, related_name="store_employers_ledger", limit_choices_to={'active': True})
+	store 		= models.ForeignKey(Store, on_delete=models.CASCADE, related_name="store_employers_ledger", limit_choices_to={'active': True})
 	in_or_out 	= models.CharField(max_length=5, choices=MONEY_IN_OR_OUT, default="Out")
-	employer  	= models.ForeignKey(StoreEmployers, related_name="employer_payments", limit_choices_to={'active': True})
+	employer  	= models.ForeignKey(StoreEmployers, on_delete=models.CASCADE, related_name="employer_payments", limit_choices_to={'active': True})
 	payment_method = models.CharField(max_length=50, blank=True, null=True)
 	reason  	= models.TextField(max_length=250, blank=True, null=True)
 	amount 		= models.IntegerField(blank = False, null=False)

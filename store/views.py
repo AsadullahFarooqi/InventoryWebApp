@@ -150,6 +150,7 @@ class ImportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.supplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
+		obj.product_name = obj.product.name
 
 		return super(ImportCreateView, self).form_valid(form)
 
@@ -171,6 +172,7 @@ class ExportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
+		obj.product_name = obj.product.name
 
 		return super(ExportCreateView, self).form_valid(form)
 
@@ -738,6 +740,7 @@ class ImportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.supplier = Supplier.objects.get(slug=self.kwargs["supplier_slug"])
+		obj.product_name = obj.product.name
 
 		return super(ImportUpdateView, self).form_valid(form)
 
@@ -765,6 +768,7 @@ class ExportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		obj = form.save(commit=False)
 		obj.store = Store.objects.get(slug=self.kwargs["store_slug"])
 		obj.customer = Customer.objects.get(slug=self.kwargs["customer_slug"])
+		obj.product_name = obj.product.name
 
 		return super(ExportUpdateView, self).form_valid(form)
 
@@ -862,6 +866,9 @@ def employer_delete_view(request, store_slug=None, employer_slug=None):
 		raise Http404
 	obj = get_object_or_404(StoreEmployers, slug=employer_slug)
 	obj.active=False
+
+	obj.employer_payments.all().update(active=False)
+
 	obj.save()
 
 	messages.success(request, "Employer is Successfully deleted!")
@@ -874,6 +881,10 @@ def customer_delete_view(request, store_slug=None, customer_slug=None):
 		raise Http404
 	obj = get_object_or_404(Customer, slug=customer_slug)
 	obj.active=False
+
+	obj.customer_exports.all().update(active=False)
+	obj.customer_payments.all().update(active=False)
+
 	obj.save()
 
 	messages.success(request, "Customer is Successfully deleted!")
@@ -886,6 +897,10 @@ def supplier_delete_view(request, store_slug=None, supplier_slug=None):
 		raise Http404
 	obj = get_object_or_404(Supplier, slug=supplier_slug)
 	obj.active=False
+
+	obj.supplier_imports.all().update(active=False)
+	obj.supplier_payments.all().update(active=False)
+
 	obj.save()
 
 	messages.success(request, "Supplier is Successfully deleted!")
@@ -898,6 +913,10 @@ def products_delete_view(request, store_slug=None, product_slug=None):
 		raise Http404
 	obj = get_object_or_404(Products, slug=product_slug)
 	obj.active=False
+
+	obj.product_imports.all().update(active=False)
+	obj.product_exports.all().update(active=False)
+
 	obj.save()
 
 	messages.success(request, "Produtct is Successfully deleted!")
@@ -926,7 +945,7 @@ def import_delete_view(request, store_slug=None, import_slug=None):
 
 	messages.success(request, "Import is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:imports_list", kwargs={"store_slug": store_slug}))
+	return HttpResponseRedirect(reverse("store:suppliers_list", kwargs={"store_slug": store_slug}))
 
 @login_required
 def export_delete_view(request, store_slug=None, export_slug=None):
@@ -938,7 +957,7 @@ def export_delete_view(request, store_slug=None, export_slug=None):
 
 	messages.success(request, "Export is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:exports_list", kwargs={"store_slug": store_slug}))
+	return HttpResponseRedirect(reverse("store:customers_list", kwargs={"store_slug": store_slug}))
 
 @login_required
 def customer_payment_delete_view(request, store_slug=None, customer_slug=None, payment_slug=None):
@@ -950,7 +969,7 @@ def customer_payment_delete_view(request, store_slug=None, customer_slug=None, p
 
 	messages.success(request, "Export Payment is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:export_payments_list", kwargs={"store_slug": store_slug,}))
+	return HttpResponseRedirect(reverse("store:customers_list", kwargs={"store_slug": store_slug,}))
 
 @login_required
 def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, payment_slug=None):
@@ -962,7 +981,7 @@ def supplier_payment_delete_view(request, store_slug=None, supplier_slug=None, p
 
 	messages.success(request, "Import payment is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:import_payments_list", kwargs={"store_slug": store_slug,}))
+	return HttpResponseRedirect(reverse("store:suppliers_list", kwargs={"store_slug": store_slug,}))
 
 
 @login_required
@@ -975,4 +994,4 @@ def employer_payment_delete_view(request, store_slug=None, employer_slug=None, p
 
 	messages.success(request, "Employer payment is Successfully deleted!")
 
-	return HttpResponseRedirect(reverse("store:employers_payments_list", kwargs={"store_slug": store_slug,}))
+	return HttpResponseRedirect(reverse("store:employers_list", kwargs={"store_slug": store_slug,}))
