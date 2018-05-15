@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
 from django.db.models import Q
@@ -171,7 +171,7 @@ class CompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 	def form_valid(self, form):
 		obj = form.save(commit=False)
-		if not request.user.is_authenticated:
+		if not self.request.user.is_authenticated:
 			return Http404
 
 		obj.user = self.request.user

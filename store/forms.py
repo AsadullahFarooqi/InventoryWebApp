@@ -6,7 +6,6 @@ from .models import (
 					StoreEmployers,
 					Customer,
 					Supplier,
-					Store,
 					Products,
 					# ContainersTypes,
 					Imported,

@@ -143,11 +143,11 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images)The STATICFILES_DIRS setting should not contain the STATIC_ROOT setting
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = str(os.path.join(BASE_DIR, "root_static"))
+STATIC_ROOT = "/home/AsadLiam/forgithub/env/lib/python3.5/site-packages/django/contrib/admin/static/admin/"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

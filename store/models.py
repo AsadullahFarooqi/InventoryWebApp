@@ -225,7 +225,7 @@ class Products(models.Model):
 	@property
 	def product_info(self):
 	    if self.material_container_made_of:
-	        return str(self.name) + " " + str(self.container_type_name) + " " + str(material_container_made_of)
+	        return str(self.name) + " " + str(self.container_type_name) + " " + str(self.material_container_made_of)
 	    else:
 	        return str(self.name) + " " + str(self.container_type_name) + " " + "none"
 

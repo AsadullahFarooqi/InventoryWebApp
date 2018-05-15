@@ -7,10 +7,10 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.user_home_page, name="home"),
-    
-    url(r'^admin/', admin.site.urls),
+
+    # url(r'^admin/', admin.site.urls),
 	url(r'^account/', include("account.urls")),
-    
+
     url(r'^store/', include("store.urls", namespace="store")),
     url(r'^company/', include("company.urls", namespace="company")),
 
